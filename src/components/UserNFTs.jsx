@@ -11,10 +11,9 @@ export default function UserNFTs() {
     const [ownedTokens, setOwnedTokens] = useState([])
 
     
-    const rendermetadata = (metadata,token) => {
+    const renderdata = (metadata,token) => {
         const { title, description, media } = metadata;
-        const isApprovedForMarketplace = token.approved_account_ids.hasOwnProperty(MarketplaceContract);
-
+        
         return (
             <Link href="/nft">
                 <div className="flex flex-col h-full shadow bg-gray-950 text-white overflow-hidden rounded-lg group" onClick={(e)=>e.preventDefault()} >
@@ -34,8 +33,7 @@ export default function UserNFTs() {
                 <footer className='h-1/7 p-4 flex flex-col justify-between bg-gray-900 transition-colors duration-300 group-hover:bg-gray-800'>
                     <div className="text-sm text-truncate ">{token.owner_id}</div>
                     <div className="text-lg font-bold text-truncate">{typeof title === 'string' ? title : 'No title available'}</div>
-                    
-                    <div className="text-sm  text-gray-500 text-truncate">{knowIfApproved(token) ? "Listed" : "Not Listed" }</div>
+                    <div className="text-sm  text-gray-500 text-truncate">{token.approved_account_ids[MarketplaceContract]  ? "Listed" : "Not Listed" }</div>
                 </footer>
             </div>
            </Link>
@@ -60,20 +58,7 @@ export default function UserNFTs() {
         
     }
 
-    const knowIfApproved = async(token)=>{
-        console.log(token.approved_account_ids[MarketplaceContract]);
-        const approved = await wallet.viewMethod({
-            contractId : MintContract,
-            method : "nft_is_approved",
-            args : {
-                token_id : `${token.token_id}`,
-                approved_account_id : `${MarketplaceContract}`,
-                approval_id : `${token.approved_account_ids[MarketplaceContract]}`
-            }
-        })
-        console.log(approved);
-        return approved
-    }
+    
     
 
     useEffect(() => {
@@ -98,7 +83,7 @@ export default function UserNFTs() {
                 <div className="grid grid-cols-1 sm:grid-cols-3 lg:grid-cols-5 gap-6">
                     {ownedTokens && ownedTokens.map((token, index) => (
                             <div key={index} className="bg-white shadow-lg rounded-lg overflow-hidden">
-                                {token.metadata && rendermetadata(token.metadata,token)} 
+                                {token.metadata && renderdata(token.metadata,token)} 
                             </div>
                     ))}
                 </div>
