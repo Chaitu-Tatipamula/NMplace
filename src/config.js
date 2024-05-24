@@ -1,6 +1,6 @@
 const nftMintContract = {
-  mainnet: 'nft_minting.chaitunear.testnet',
-  testnet: 'nft_minting.chaitunear.testnet',
+  mainnet: 'nft.chaitunear.testnet',
+  testnet: 'nft.chaitunear.testnet',
 };
 const marketplaceContract = {
   mainnet: 'marketplace.chaitunear.testnet',

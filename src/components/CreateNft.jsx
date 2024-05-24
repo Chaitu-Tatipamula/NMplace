@@ -1,29 +1,33 @@
 "use client"
 import { MintContract } from '@/config'
 import { NearContext } from '@/context'
-import React, { useContext, useState } from 'react'
+import React, { useContext, useEffect, useState } from 'react'
 import Button from './button'
 
-const CONTRACT = MintContract
 export default function CreateNft() {
     const {signedAccountId,wallet } = useContext(NearContext)
     const [title,setTitle] = useState(null)
     const [description,setDescription] = useState(null)
     const [media,setMedia] = useState(null)
     const [loading,setLoading] = useState(false)
+    useEffect(()=>{
+      console.log(title);
+      console.log(description);
+      console.log(media);
+
+    },[title,description,media])
     const handleSubmit = async()=>{
         setLoading(true)
-        const transaction = await wallet.callMethod({contractId : CONTRACT ,method : 'nft_mint', args : {
-            token_id: ` ${signedAccountId} go-team-token-5`,
+        const transaction = await wallet.callMethod({contractId : MintContract ,method : 'nft_mint', args : {
+            token_id: `${signedAccountId} go-team-token-3`,
             metadata: {
               title: `${title}`,
               description: `${description}`,
               media: `${media}`,
             },
-            
             receiver_id: signedAccountId,
           },
-          deposit : '10000000000000000000000',
+          deposit : '12000000000000000000000',
           gas : "200000000000000"
          })
          setLoading(false)

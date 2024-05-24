@@ -126,6 +126,33 @@ export class Wallet {
   };
 
   /**
+   * Signs and sends a transaction.
+   * @param {string} receiverId - The NEAR account ID of the contract receiving the transaction.
+   * @param {Array<Object>} actions - Actions to be performed in the transaction.
+   * @returns {Promise<any>} - A promise that resolves to the transaction result.
+   */
+  signAndSendTransaction = async({ transactions})=> {
+    try {
+      const selectedWallet = await (await this.selector).wallet();
+
+      // Create a batch of transaction promises
+      const results = [];
+      for (const { receiverId, actions } of transactions) {
+        const outcome = await selectedWallet.signAndSendTransaction({
+          receiverId,
+          actions,
+        });
+        results.push(providers.getTransactionLastResult(outcome));
+      }
+
+      return results;
+    } catch (error) {
+      console.error("Error signing and sending transactions:", error);
+      throw error;
+    }
+  }
+
+  /**
    * Makes a call to a contract
    * @param {string} txhash - the transaction hash
    * @returns {Promise<JSON.value>} - the result of the transaction
