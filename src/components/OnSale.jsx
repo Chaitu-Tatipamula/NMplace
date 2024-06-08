@@ -3,6 +3,7 @@ import { MarketplaceContract, MintContract } from '@/config'
 import { NearContext } from '@/context'
 import { useApprovedTokens } from '@/hooks/useApprovedTokens'
 import { useTokens } from '@/hooks/useTokens'
+import { removeListing, removeNftListing } from '@/utils/menuOps'
 import { utils } from 'near-api-js'
 import Link from 'next/link'
 import { useContext, useState } from 'react'
@@ -35,20 +36,7 @@ export default function OnSale() {
         }) 
         
     }
-    const removeListing = async(tokenId)=>{
-        const transaction =  await wallet.callMethod({
-            contractId : MintContract,
-            method : "remove_sale",
-            args : {
-                nft_contract_id : `${MintContract}`,
-                token_id : `${tokenId}`,
-                
-            },
-            deposit : `${utils.format.parseNearAmount('0.001')}`,
-            gas : "200000000000000"
-        }) 
-        
-    }
+    
     const updatePrice = async(tokenId, price)=>{
         const transaction =  await wallet.callMethod({
             contractId : MarketplaceContract,
@@ -89,7 +77,7 @@ export default function OnSale() {
                                 {!token.owner_id==signedAccountId &&
                                 <button onClick={()=>buyNFT(token.token_id)} className="flex items-center justify-start gap-2 w-full px-2 py-2 hover:bg-gray-700 transition-colors duration-300"><MdOutlineSell/> Buy</button>}
                                 {token.owner_id==signedAccountId && 
-                                <button onClick={()=>removeListing(token.token_id)} className="flex items-center justify-start gap-2 w-full px-2 py-2 hover:bg-gray-700 transition-colors duration-300"><MdOutlineBackspace/> Remove Listing</button>}
+                                <button onClick={()=>removeNftListing(wallet,MintContract,MarketplaceContract,token.token_id)} className="flex items-center justify-start gap-2 w-full px-2 py-2 hover:bg-gray-700 transition-colors duration-300"><MdOutlineBackspace/> Remove Listing</button>}
                                 {token.owner_id==signedAccountId && 
                                 <button onClick={()=>updatePrice(token.token_id,price)} className="flex items-center justify-start gap-2 w-full px-2 py-2 hover:bg-gray-700 transition-colors duration-300"><BiTransfer/> Update Price</button>}
                             </div>

@@ -4,7 +4,7 @@ import { NearContext } from '@/context'
 import React, { useContext, useEffect, useState } from 'react'
 import {HiMenu} from 'react-icons/hi'
 import {utils} from 'near-api-js'
-import { removeNftListing, transferNft } from '@/utils/menuOps'
+import { removeNftListing, sellNft, transferNft } from '@/utils/menuOps'
 import { MdOutlineSell } from "react-icons/md";
 import { BiTransfer } from "react-icons/bi";
 import { MdOutlineBackspace } from "react-icons/md";
@@ -30,7 +30,7 @@ export default function UserNFTs() {
                         <img src={media} alt='null' className="w-full h-full object-cover transition-transform duration-300 transform group-hover:scale-110" />
                     )}
                     <div className="absolute top-2 right-2 flex space-x-2">
-                        <button onClick={(e) => { e.stopPropagation(); sellNft(token.token_id) }} className="bg-gray-950 text-white px-2 py-1 rounded hover:bg-gray-900">
+                        <button onClick={(e) => { e.stopPropagation(); sellNft(wallet, MintContract, MarketplaceContract, token.token_id) }} className="bg-gray-950 text-white px-2 py-1 rounded hover:bg-gray-900">
                             Sell
                         </button>
                         <button onClick={(e) => {e.stopPropagation();  toggleMenu(index) }} className="bg-gray-950 text-white px-2 py-1 rounded hover:bg-gray-900">
@@ -38,7 +38,7 @@ export default function UserNFTs() {
                         {menuOpen === index && (
                             <div className="absolute right-0 mt-4 bg-gray-900  w-40 shadow-lg sm:w-38 md:w-30 lg:w-40 z-10">
                             <div className="py-2 text-white">
-                                <button onClick={()=>sellNft(token.token_id)} className="flex items-center justify-start gap-2 w-full px-2 py-2 hover:bg-gray-700 transition-colors duration-300"><MdOutlineSell/> Sell</button>
+                                <button onClick={()=>sellNft(wallet, MintContract, MarketplaceContract, token.token_id)} className="flex items-center justify-start gap-2 w-full px-2 py-2 hover:bg-gray-700 transition-colors duration-300"><MdOutlineSell/> Sell</button>
                                 <button onClick={()=>transferNft(wallet,MintContract,token)} className="flex items-center justify-start gap-2 w-full px-2 py-2 hover:bg-gray-700 transition-colors duration-300"><BiTransfer/> Transfer</button>
                                 <button onClick={()=>removeNftListing(wallet,MintContract,MarketplaceContract,token.token_id)} className="flex items-center justify-start gap-2 w-full px-2 py-2 hover:bg-gray-700 transition-colors duration-300"><MdOutlineBackspace/> Remove Listing</button>
                             </div>
@@ -56,22 +56,7 @@ export default function UserNFTs() {
         )
     }
 
-    const sellNft = async(tokenId)=>{
-        const transaction =  await wallet.callMethod({
-            contractId : MintContract,
-            method : "nft_approve",
-            args : {
-                token_id : `${tokenId}`,
-                account_id : `${MarketplaceContract}`,
-                msg : JSON.stringify({
-                    sale_conditions: "0.1"
-                })
-            },
-            deposit : `${utils.format.parseNearAmount("0.001")}`,
-            gas : "200000000000000"
-        }) 
-        
-    }
+    
 
     
     

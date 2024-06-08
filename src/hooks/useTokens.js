@@ -10,8 +10,9 @@ export function useTokens() {
             async function fetch(){
                 const data = await wallet.viewMethod({
                     contractId: MintContract,
-                    method: "nft_tokens",
+                    method: "nft_tokens_for_owner",
                     args: {
+                        account_id : `${signedAccountId}`,
                         from_index : 0,
                         limit : 50
                     }
