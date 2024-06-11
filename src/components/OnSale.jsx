@@ -3,20 +3,33 @@ import { MarketplaceContract, MintContract } from '@/config'
 import { NearContext } from '@/context'
 import { useApprovedTokens } from '@/hooks/useApprovedTokens'
 import { useTokens } from '@/hooks/useTokens'
-import { removeListing, removeNftListing } from '@/utils/menuOps'
+import { removeListing, removeNftListing, updatePrice } from '@/utils/menuOps'
 import { utils } from 'near-api-js'
 import Link from 'next/link'
 import { useContext, useState } from 'react'
 import { BiTransfer } from 'react-icons/bi'
 import {HiMenu} from 'react-icons/hi'
 import { MdOutlineBackspace, MdOutlineSell } from "react-icons/md";
+import { UpdatePriceModal } from './UpdatePriceModal'
 
 
 export default function OnSale() {
     const {wallet, signedAccountId} = useContext(NearContext)
     const salesObj = useApprovedTokens()
     const [menuOpen, setMenuOpen] = useState(null); 
-   
+    const [openPriceModal, setOpenPriceModal] = useState(false);
+    const [tokenId,setTokenId] = useState(null)
+    
+    const handleOpenPriceModal = (token) => {
+        setOpenPriceModal(true)
+        setTokenId(token)
+    };
+  
+    
+  
+    const handleClose = () => {
+      setOpenPriceModal(false)
+    };
 
     const toggleMenu = (index) => {
         setMenuOpen(menuOpen === index ? null : index);
@@ -24,7 +37,7 @@ export default function OnSale() {
 
     const buyNFT = async(tokenId)=>{
         const transaction =  await wallet.callMethod({
-            contractId : MintContract,
+            contractId : MarketplaceContract,
             method : "offer",
             args : {
                 nft_contract_id : `${MintContract}`,
@@ -37,21 +50,7 @@ export default function OnSale() {
         
     }
     
-    const updatePrice = async(tokenId, price)=>{
-        const transaction =  await wallet.callMethod({
-            contractId : MarketplaceContract,
-            method : "update_price",
-            args : {
-                nft_contract_id : `${MintContract}`,
-                token_id : `${tokenId}`,
-                price : `${price}`
-                
-            },
-            deposit : `${utils.format.parseNearAmount("0.001")}`,
-            gas : "200000000000000"
-        }) 
-        
-    }
+    
     
     function renderdata(metadata,token,index){
       const { title, description, media } = metadata;
@@ -64,7 +63,7 @@ export default function OnSale() {
                   )}
                   <div className="absolute top-2 right-2 flex space-x-2">
                      {
-                        !token.owner_id==signedAccountId && 
+                       
                         <button onClick={(e)=>{e.stopPropagation(); buyNFT(token.token_id)}} className="bg-gray-950 text-white px-2 py-1 rounded hover:bg-gray-900">
                             Buy
                         </button>
@@ -79,7 +78,7 @@ export default function OnSale() {
                                 {token.owner_id==signedAccountId && 
                                 <button onClick={()=>removeNftListing(wallet,MintContract,MarketplaceContract,token.token_id)} className="flex items-center justify-start gap-2 w-full px-2 py-2 hover:bg-gray-700 transition-colors duration-300"><MdOutlineBackspace/> Remove Listing</button>}
                                 {token.owner_id==signedAccountId && 
-                                <button onClick={()=>updatePrice(token.token_id,price)} className="flex items-center justify-start gap-2 w-full px-2 py-2 hover:bg-gray-700 transition-colors duration-300"><BiTransfer/> Update Price</button>}
+                                <button onClick={()=>handleOpenPriceModal(`${token.token_id}`)} className="flex items-center justify-start gap-2 w-full px-2 py-2 hover:bg-gray-700 transition-colors duration-300"><BiTransfer/> Update Price</button>}
                             </div>
                             </div>
                         )}
@@ -89,7 +88,7 @@ export default function OnSale() {
               <footer className='h-1/7 p-4 flex flex-col justify-between bg-gray-900 transition-colors duration-300 group-hover:bg-gray-800'>
                   <div className="text-sm text-truncate ">{token.owner_id}</div>
                   <div className="text-lg font-bold text-truncate">{typeof title === 'string' ? title : 'No title available'}</div>
-                  <div className="text-sm  text-gray-500 text-truncate">{token.approved_account_ids[`${MarketplaceContract}`]!=null  ? "Listed" : "Not Listed" }</div>
+                  {token.owner_id==signedAccountId &&  <div className="text-sm  text-gray-500 text-truncate">{token.approved_account_ids[`${MarketplaceContract}`]!=null  ? "Listed" : "Not Listed" }</div>}
               </footer>
           </div>
         
@@ -108,6 +107,8 @@ export default function OnSale() {
                                 </div>
                         ))}
                     </div>
+                    <UpdatePriceModal open={openPriceModal} handleClose={handleClose} tokenId={tokenId} updatePrice={updatePrice} />
+
         </div>
     )
 }

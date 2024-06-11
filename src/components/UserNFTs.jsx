@@ -8,13 +8,32 @@ import { removeNftListing, sellNft, transferNft } from '@/utils/menuOps'
 import { MdOutlineSell } from "react-icons/md";
 import { BiTransfer } from "react-icons/bi";
 import { MdOutlineBackspace } from "react-icons/md";
+import { SellModal } from './SellModal'
+import { TransferModaal } from './TransferModaal'
 
 
 export default function UserNFTs() {
     const { signedAccountId, wallet } = useContext(NearContext)
     const [ownedTokens, setOwnedTokens] = useState([])
     const [menuOpen, setMenuOpen] = useState(null); 
-   
+    const [openSellModal, setOpenSellModal] = useState(false);
+    const [openTransferModal, setOpenTransferModal] = useState(false);
+    const [tokenId,setTokenId] = useState(null)
+    
+    const handleOpenSellModal = (token) => {
+      setOpenSellModal(true)
+      setTokenId(token)
+    };
+  
+    const handleOpenTransferModal = (token) => {
+      setOpenTransferModal(true)
+      setTokenId(token)
+    };
+  
+    const handleClose = () => {
+      setOpenSellModal(false)
+      setOpenTransferModal(false)
+    };
 
     const toggleMenu = (index) => {
         setMenuOpen(menuOpen === index ? null : index);
@@ -27,10 +46,10 @@ export default function UserNFTs() {
                 <div onClick={()=>window.location.href = "/nft"} className="cursor-pointer flex flex-col h-full shadow bg-gray-950 text-white overflow-hidden rounded-lg group" >
                 <div className='relative h-6/7 h-full overflow-hidden'>
                     {media && (
-                        <img src={media} alt='null' className="w-full h-full object-cover transition-transform duration-300 transform group-hover:scale-110" />
+                        <img src={media} alt='null' className="w-full h-full object-cover transition-transform duration-500 transform group-hover:scale-110" />
                     )}
                     <div className="absolute top-2 right-2 flex space-x-2">
-                        <button onClick={(e) => { e.stopPropagation(); sellNft(wallet, MintContract, MarketplaceContract, token.token_id) }} className="bg-gray-950 text-white px-2 py-1 rounded hover:bg-gray-900">
+                        <button onClick={(e) => { e.stopPropagation(); handleOpenSellModal(`${token.token_id}`) }} className="bg-gray-950 text-white px-2 py-1 rounded hover:bg-gray-900">
                             Sell
                         </button>
                         <button onClick={(e) => {e.stopPropagation();  toggleMenu(index) }} className="bg-gray-950 text-white px-2 py-1 rounded hover:bg-gray-900">
@@ -38,8 +57,8 @@ export default function UserNFTs() {
                         {menuOpen === index && (
                             <div className="absolute right-0 mt-4 bg-gray-900  w-40 shadow-lg sm:w-38 md:w-30 lg:w-40 z-10">
                             <div className="py-2 text-white">
-                                <button onClick={()=>sellNft(wallet, MintContract, MarketplaceContract, token.token_id)} className="flex items-center justify-start gap-2 w-full px-2 py-2 hover:bg-gray-700 transition-colors duration-300"><MdOutlineSell/> Sell</button>
-                                <button onClick={()=>transferNft(wallet,MintContract,token)} className="flex items-center justify-start gap-2 w-full px-2 py-2 hover:bg-gray-700 transition-colors duration-300"><BiTransfer/> Transfer</button>
+                                <button onClick={()=>handleOpenSellModal(`${token.token_id}`)} className="flex items-center justify-start gap-2 w-full px-2 py-2 hover:bg-gray-700 transition-colors duration-300"><MdOutlineSell/> Sell</button>
+                                <button onClick={()=>handleOpenTransferModal(`${token.token_id}`)} className="flex items-center justify-start gap-2 w-full px-2 py-2 hover:bg-gray-700 transition-colors duration-300"><BiTransfer/> Transfer</button>
                                 <button onClick={()=>removeNftListing(wallet,MintContract,MarketplaceContract,token.token_id)} className="flex items-center justify-start gap-2 w-full px-2 py-2 hover:bg-gray-700 transition-colors duration-300"><MdOutlineBackspace/> Remove Listing</button>
                             </div>
                             </div>
@@ -87,6 +106,9 @@ export default function UserNFTs() {
                             </div>
                     ))}
                 </div>
+                <SellModal open={openSellModal} handleClose={handleClose} tokenId={tokenId} sellNft={sellNft} />
+                <TransferModaal open={openTransferModal} handleClose={handleClose} tokenId={tokenId} transferNft={transferNft} />
+
         </div>
 
     )

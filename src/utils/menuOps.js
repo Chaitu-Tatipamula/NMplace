@@ -25,7 +25,7 @@ export async function removeNftListing(wallet,MintContract,MarketContract,tokenI
     })
 }
 
-export async function sellNft(wallet,MintContract,MarketplaceContract,tokenId){
+export async function sellNft(wallet,MintContract,MarketplaceContract,tokenId,price){
     const transaction =  await wallet.callMethod({
         contractId : MintContract,
         method : "nft_approve",
@@ -33,11 +33,25 @@ export async function sellNft(wallet,MintContract,MarketplaceContract,tokenId){
             token_id : `${tokenId}`,
             account_id : `${MarketplaceContract}`,
             msg : JSON.stringify({
-                sale_conditions: "0.1"
+                sale_conditions: `${price}`
             })
         },
         deposit : `${utils.format.parseNearAmount("0.001")}`,
-        gas : "200000000000000"
+    }) 
+    gas : "200000000000000"
+}
+
+export async function updatePrice(wallet,MintContract,MarketplaceContract,tokenId, price){
+    const transaction =  await wallet.callMethod({
+        contractId : MarketplaceContract,
+        method : "update_price",
+        args : {
+            nft_contract_id : `${MintContract}`,
+            token_id : `${tokenId}`,
+            price : `${price}`
+            
+        },
+        deposit : `${utils.format.parseNearAmount("0.000000000000000000000001")}`,
     }) 
     
 }

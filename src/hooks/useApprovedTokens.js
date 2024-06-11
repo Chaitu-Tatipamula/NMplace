@@ -2,23 +2,21 @@ import React, { useContext, useState,useEffect } from 'react'
 import { MarketplaceContract, MintContract } from '@/config';
 import { NearContext } from '@/context';
 import { useTokens } from './useTokens';
+import { useAllTokens } from './useAllTokens';
 
 export  function useApprovedTokens() {
     const {wallet,signedAccountId} = useContext(NearContext)
     const [salesObj,setSalesObj] = useState([])
-    const tokenzz = useTokens()
+    const tokenzz = useAllTokens()
     async function isTokenApproved(token){
         const approved = await wallet.viewMethod({
-          contractId : MintContract,
-          method : "nft_is_approved",
+          contractId : MarketplaceContract,
+          method : "get_sale",
           args : {
-              token_id : `${token.token_id}`,
-              approved_account_id : `${MarketplaceContract}`,
-              approval_id : `${token.approved_account_ids[MarketplaceContract]}`
+              nft_contract_token : `${MintContract}.${token.token_id}`,
           }
         })
-        // console.log(approved);
-        return approved
+        return approved != null
     }
     useEffect(()=>{
         async function fetch(){
