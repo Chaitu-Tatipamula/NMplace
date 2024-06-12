@@ -8,28 +8,39 @@ export  function useApprovedTokens() {
     const {wallet,signedAccountId} = useContext(NearContext)
     const [salesObj,setSalesObj] = useState([])
     const tokenzz = useAllTokens()
-    async function isTokenApproved(token){
-        const approved = await wallet.viewMethod({
-          contractId : MarketplaceContract,
-          method : "get_sale",
-          args : {
-              nft_contract_token : `${MintContract}.${token.token_id}`,
-          }
-        })
-        return approved != null
-    }
+    
     useEffect(()=>{
         async function fetch(){
-            const approvedTokens = []
-            for(let token of tokenzz){
-                const approved =await isTokenApproved(token)
-                if(approved){
-                    approvedTokens.push(token)
+
+            const approved = await wallet.viewMethod({
+                contractId : MarketplaceContract,
+                method : "get_sales_by_nft_contract_id",
+                args : {
+                  nft_contract_id : `${MintContract}`,
                 }
-            }
-            setSalesObj(approvedTokens)
+              })
+              const metadataMap = tokenzz.reduce((map, token) => {
+                map[token.token_id] = token.metadata;
+                return map;
+            }, {});
+
+            // Add metadata to each sale object
+            const salesWithMetadata = approved.map(sale => {
+                const tokenId = sale.token_id; // Ensure this matches the property name in your sale object
+                const metadata = metadataMap[tokenId];
+                return {
+                    ...sale,
+                    metadata,
+                };
+            });
+
+            setSalesObj(salesWithMetadata);
         }
-        fetch()
+
+        if (wallet && signedAccountId && tokenzz.length > 0) {
+            fetch();
+        }
+
   
       },[wallet,signedAccountId,tokenzz]) 
 

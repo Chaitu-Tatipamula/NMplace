@@ -63,7 +63,7 @@ export default function OnSale() {
                   )}
                   <div className="absolute top-2 right-2 flex space-x-2">
                      {
-                       
+                       token.owner_id!=signedAccountId &&
                         <button onClick={(e)=>{e.stopPropagation(); buyNFT(token.token_id)}} className="bg-gray-950 text-white px-2 py-1 rounded hover:bg-gray-900">
                             Buy
                         </button>
@@ -73,7 +73,7 @@ export default function OnSale() {
                         {menuOpen === index && (
                             <div className="absolute right-0 mt-4 bg-gray-900  w-40 shadow-lg sm:w-38 md:w-30 lg:w-40 z-10">
                             <div className="py-2 text-white">
-                                {!token.owner_id==signedAccountId &&
+                                {token.owner_id!=signedAccountId &&
                                 <button onClick={()=>buyNFT(token.token_id)} className="flex items-center justify-start gap-2 w-full px-2 py-2 hover:bg-gray-700 transition-colors duration-300"><MdOutlineSell/> Buy</button>}
                                 {token.owner_id==signedAccountId && 
                                 <button onClick={()=>removeNftListing(wallet,MintContract,MarketplaceContract,token.token_id)} className="flex items-center justify-start gap-2 w-full px-2 py-2 hover:bg-gray-700 transition-colors duration-300"><MdOutlineBackspace/> Remove Listing</button>}
@@ -88,7 +88,7 @@ export default function OnSale() {
               <footer className='h-1/7 p-4 flex flex-col justify-between bg-gray-900 transition-colors duration-300 group-hover:bg-gray-800'>
                   <div className="text-sm text-truncate ">{token.owner_id}</div>
                   <div className="text-lg font-bold text-truncate">{typeof title === 'string' ? title : 'No title available'}</div>
-                  {token.owner_id==signedAccountId &&  <div className="text-sm  text-gray-500 text-truncate">{token.approved_account_ids[`${MarketplaceContract}`]!=null  ? "Listed" : "Not Listed" }</div>}
+                  {token.owner_id==signedAccountId &&  <div className="text-sm  text-gray-500 text-truncate">Listed and Owned</div>}
               </footer>
           </div>
         
