@@ -1,7 +1,6 @@
 import React, { useContext, useState,useEffect } from 'react'
 import { MarketplaceContract, MintContract } from '@/config';
 import { NearContext } from '@/context';
-import { useTokens } from './useTokens';
 import { useAllTokens } from './useAllTokens';
 
 export  function useApprovedTokens() {

@@ -2,15 +2,14 @@
 import { MarketplaceContract, MintContract } from '@/config'
 import { NearContext } from '@/context'
 import { useApprovedTokens } from '@/hooks/useApprovedTokens'
-import { useTokens } from '@/hooks/useTokens'
-import { removeListing, removeNftListing, updatePrice } from '@/utils/menuOps'
+import { removeNftListing, updatePrice } from '@/utils/menuOps'
 import { utils } from 'near-api-js'
-import Link from 'next/link'
 import { useContext, useState } from 'react'
 import { BiTransfer } from 'react-icons/bi'
 import {HiMenu} from 'react-icons/hi'
 import { MdOutlineBackspace, MdOutlineSell } from "react-icons/md";
 import { UpdatePriceModal } from './UpdatePriceModal'
+import { useRouter } from 'next/navigation'
 
 
 export default function OnSale() {
@@ -19,7 +18,8 @@ export default function OnSale() {
     const [menuOpen, setMenuOpen] = useState(null); 
     const [openPriceModal, setOpenPriceModal] = useState(false);
     const [tokenId,setTokenId] = useState(null)
-    
+    const router = useRouter() 
+
     const handleOpenPriceModal = (token) => {
         setOpenPriceModal(true)
         setTokenId(token)
@@ -56,7 +56,7 @@ export default function OnSale() {
       const { title, description, media } = metadata;
         return (
         
-            <div onClick={()=>window.location.href = "/nft"}  className="cursor-pointer flex flex-col h-full shadow bg-gray-950 text-white overflow-hidden rounded-lg group"  >
+            <div onClick={()=>router.push(`/nft/${token.owner_id}/${token.token_id}`)}  className="cursor-pointer flex flex-col h-full shadow bg-gray-950 text-white overflow-hidden rounded-lg group"  >
               <div className='relative h-5/6 overflow-hidden'>
                   {media && (
                     <img src={media} alt='null' className="w-full h-full object-cover transition-transform duration-300 transform group-hover:scale-110" />
