@@ -1,4 +1,4 @@
-import OnSale from '@/components/Onsale'
+import OnSale from '@/components/OnSale'
 
 export default function page() {
   return (
