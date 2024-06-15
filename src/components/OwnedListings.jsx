@@ -1,7 +1,7 @@
 "use client"
 import { MarketplaceContract, MintContract } from '@/config'
 import { NearContext } from '@/context'
-import { removeNftListing, updatePrice } from '@/utils/menuOps'
+import { buyNFT, removeNftListing, updatePrice } from '@/utils/menuOps'
 import { utils } from 'near-api-js'
 import { useContext, useState } from 'react'
 import { BiTransfer } from 'react-icons/bi'
@@ -33,23 +33,7 @@ export default function Ownerlistings() {
 
     const toggleMenu = (index) => {
         setMenuOpen(menuOpen === index ? null : index);
-      };
-
-    const buyNFT = async(tokenId)=>{
-        const transaction =  await wallet.callMethod({
-            contractId : MarketplaceContract,
-            method : "offer",
-            args : {
-                nft_contract_id : `${MintContract}`,
-                token_id : `${tokenId}`,
-                
-            },
-            deposit : `${utils.format.parseNearAmount("0.001")}`,
-            gas : "200000000000000"
-        }) 
-        
-    }
-    
+      };    
     
     
     function renderdata(metadata,token,index){
@@ -64,7 +48,7 @@ export default function Ownerlistings() {
                   <div className="absolute top-2 right-2 flex space-x-2">
                      {
                        token.owner_id!=signedAccountId &&
-                        <button onClick={(e)=>{e.stopPropagation(); buyNFT(token.token_id)}} className="bg-gray-950 text-white px-2 py-1 rounded hover:bg-gray-900">
+                        <button onClick={(e)=>{e.stopPropagation();  buyNFT(wallet,MintContract,MarketplaceContract,token.token_id,token.sale_conditions)}} className="bg-gray-950 text-white px-2 py-1 rounded hover:bg-gray-900">
                             Buy
                         </button>
                      }
@@ -74,7 +58,7 @@ export default function Ownerlistings() {
                             <div className="absolute right-0 mt-4 bg-gray-900  w-40 shadow-lg sm:w-38 md:w-30 lg:w-40 z-10">
                             <div className="py-2 text-white">
                                 {token.owner_id!=signedAccountId &&
-                                <button onClick={()=>buyNFT(token.token_id)} className="flex items-center justify-start gap-2 w-full px-2 py-2 hover:bg-gray-700 transition-colors duration-300"><MdOutlineSell/> Buy</button>}
+                                <button onClick={()=> buyNFT(wallet,MintContract,MarketplaceContract,token.token_id,token.sale_conditions)} className="flex items-center justify-start gap-2 w-full px-2 py-2 hover:bg-gray-700 transition-colors duration-300"><MdOutlineSell/> Buy</button>}
                                 {token.owner_id==signedAccountId && 
                                 <button onClick={()=>removeNftListing(wallet,MintContract,MarketplaceContract,token.token_id)} className="flex items-center justify-start gap-2 w-full px-2 py-2 hover:bg-gray-700 transition-colors duration-300"><MdOutlineBackspace/> Remove Listing</button>}
                                 {token.owner_id==signedAccountId && 
