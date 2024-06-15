@@ -55,3 +55,18 @@ export async function updatePrice(wallet,MintContract,MarketplaceContract,tokenI
     }) 
     
 }
+
+export async function buyNFT(wallet,MintContract,MarketplaceContract,tokenId,price){
+    const transaction =  await wallet.callMethod({
+        contractId : MarketplaceContract,
+        method : "offer",
+        args : {
+            nft_contract_id : `${MintContract}`,
+            token_id : `${tokenId}`,
+            
+        },
+        deposit : `${utils.format.parseNearAmount(`${price}`)}`,
+        gas : "200000000000000"
+    }) 
+    
+}

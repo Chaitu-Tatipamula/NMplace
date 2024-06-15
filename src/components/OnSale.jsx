@@ -2,7 +2,7 @@
 import { MarketplaceContract, MintContract } from '@/config'
 import { NearContext } from '@/context'
 import { useApprovedTokens } from '@/hooks/useApprovedTokens'
-import { removeNftListing, updatePrice } from '@/utils/menuOps'
+import { buyNFT, removeNftListing, updatePrice } from '@/utils/menuOps'
 import { utils } from 'near-api-js'
 import { useContext, useState } from 'react'
 import { BiTransfer } from 'react-icons/bi'
@@ -35,20 +35,7 @@ export default function OnSale() {
         setMenuOpen(menuOpen === index ? null : index);
       };
 
-    const buyNFT = async(tokenId)=>{
-        const transaction =  await wallet.callMethod({
-            contractId : MarketplaceContract,
-            method : "offer",
-            args : {
-                nft_contract_id : `${MintContract}`,
-                token_id : `${tokenId}`,
-                
-            },
-            deposit : `${utils.format.parseNearAmount("0.001")}`,
-            gas : "200000000000000"
-        }) 
-        
-    }
+    
     
     
     
@@ -64,7 +51,7 @@ export default function OnSale() {
                   <div className="absolute top-2 right-2 flex space-x-2">
                      {
                        token.owner_id!=signedAccountId &&
-                        <button onClick={(e)=>{e.stopPropagation(); buyNFT(token.token_id)}} className="bg-gray-950 text-white px-2 py-1 rounded hover:bg-gray-900">
+                        <button onClick={(e)=>{e.stopPropagation(); buyNFT(wallet,MintContract,MarketplaceContract,token.token_id,token.sale_conditions)}} className="bg-gray-950 text-white px-2 py-1 rounded hover:bg-gray-900">
                             Buy
                         </button>
                      }
@@ -87,7 +74,10 @@ export default function OnSale() {
               </div>
               <footer className='h-1/7 p-4 flex flex-col justify-between bg-gray-900 transition-colors duration-300 group-hover:bg-gray-800'>
                   <div className="text-sm text-truncate ">{token.owner_id}</div>
-                  <div className="text-lg font-bold text-truncate">{typeof title === 'string' ? title : 'No title available'}</div>
+                  <div className='flex justify-between items-center'>
+                    <div className="text-lg font-bold text-truncate">{typeof title === 'string' ? title : 'No title available'}</div>
+                    <div className="text-sm  text-gray-500 text-truncate">{token.sale_conditions} NEAR</div>
+                  </div>
                   {token.owner_id==signedAccountId &&  <div className="text-sm  text-gray-500 text-truncate">Listed and Owned</div>}
               </footer>
           </div>
