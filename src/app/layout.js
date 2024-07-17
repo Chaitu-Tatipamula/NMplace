@@ -1,21 +1,26 @@
-'use client';
+"use client";
 
-import { useEffect, useState } from 'react';
+import { useEffect, useState } from "react";
 
-import '@/app/globals.css';
-import { NearContext } from '@/context';
-import { Navigation } from '@/components/Navigation';
-import { NetworkId, HelloNearContract } from '@/config';
+import "@/app/globals.css";
+import { NearContext } from "@/context";
+import { Navigation } from "@/components/Navigation";
+import { NetworkId, HelloNearContract } from "@/config";
 
-import { Wallet } from '@/wallets/near';
+import { Wallet } from "@/wallets/near";
 
-const wallet = new Wallet({ networkId: NetworkId, createAccessKeyFor: HelloNearContract });
+const wallet = new Wallet({
+  networkId: NetworkId,
+  createAccessKeyFor: HelloNearContract,
+});
 
 // Layout Component
 export default function RootLayout({ children }) {
-  const [signedAccountId, setSignedAccountId] = useState('');
+  const [signedAccountId, setSignedAccountId] = useState("");
 
-  useEffect(() => { wallet.startUp(setSignedAccountId); }, []);
+  useEffect(() => {
+    wallet.startUp(setSignedAccountId);
+  }, []);
 
   return (
     <html lang="en">
