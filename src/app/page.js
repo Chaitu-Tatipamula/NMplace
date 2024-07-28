@@ -6,6 +6,7 @@ import { ScrollLogo } from "@/components/Scrolling";
 import TrendingThisWeek from "@/components/TredingThisWeek";
 import BrowseCategories from "@/components/Browse";
 import { NFTBrowse } from "@/components/MFTBrowse";
+import { NftCircleAction } from "@/components/Orbatingcircle";
 
 export default function Home() {
   return (
@@ -17,14 +18,14 @@ export default function Home() {
       <NFTBrowse />
       <div className="self-stretch flex flex-col items-center justify-start bg-[url('/toplisted.png')] bg-cover bg-no-repeat bg-[top] max-w-full z-[7] text-[3.188rem] font-segoe-ui">
         <div className="self-stretch [background:linear-gradient(180deg,_rgba(162,_89,_255,_0),_#020202_78.38%)] flex flex-row items-end justify-center py-[3.75rem] px-[1.25rem] box-border min-h-[40rem] max-w-full">
-          <div className="w-[65.625rem] flex flex-row items-end justify-center max-w-full [row-gap:20px] mq1050:flex-wrap">
-            <div className="flex-1 flex flex-col items-start justify-start gap-[1.875rem] min-w-[30.688rem] max-w-full mq750:min-w-full">
+          <div className="w-[65.625rem] flex flex-col items-center justify-center max-w-full [row-gap:20px] mq1050:flex-wrap text-white sm:flex-row">
+            <div className="flex-1 flex flex-col items-start justify-center gap-[1.875rem]  max-w-full mq750:min-w-full">
               <button className="cursor-pointer py-[0.5rem] px-[1.187rem] bg-chocolate-300 rounded-xl flex flex-row items-center justify-start gap-[0.75rem] border-[1px] border-solid border-chocolate-200">
                 <div className="flex flex-row items-start justify-start">
                   <img
-                    className="h-[1.5rem] w-[1.5rem] relative object-cover"
+                    className="h-[1.5rem] w-[1.5rem] relative object-cover rounded-full"
                     alt=""
-                    src="/asset-12-2@2x.png"
+                    src="/Tnft1.png"
                   />
                 </div>
                 <div className="relative text-[1rem] leading-[140%] font-basebody-work-sans text-croc-primary-white text-left inline-block min-w-[4.688rem]">
@@ -38,14 +39,14 @@ export default function Home() {
                 <img
                   className="h-[1.25rem] w-[1.25rem] relative"
                   alt=""
-                  src="/eye-1.svg"
+                  src="/eye.svg"
                 />
                 <div className="relative text-[1rem] leading-[140%] font-segoe-ui text-croc-primary-white text-center inline-block min-w-[3.625rem]">
                   See NFT
                 </div>
               </button>
             </div>
-            <div className="w-[18.438rem] [backdrop-filter:blur(10px)] rounded-xl bg-chocolate-300 box-border flex flex-col items-start justify-end py-[1.75rem] px-[1.812rem] gap-[0.625rem] min-w-[18.438rem] text-[0.75rem] font-caption-space-mono border-[1px] border-solid border-chocolate-200 mq1050:flex-1">
+            <div className="w-[18.438rem] [backdrop-filter:blur(10px)] rounded-xl bg-chocolate-300 box-border flex flex-col items-center justify-center py-[1.75rem] px-[1.812rem] gap-[0.625rem] min-w-[18.438rem] text-[0.75rem] font-caption-space-mono border-[1px] border-solid border-chocolate-200 mq1050:flex-1">
               <div className="self-stretch relative leading-[110%]">
                 Auction ends in:
               </div>
@@ -85,7 +86,7 @@ export default function Home() {
           </div>
         </div>
       </div>
-
+      <NftCircleAction />
       {/* <h1 className="text-5xl font-bold">Home</h1> */}
       {/* <h2>My NFTs</h2>
       <UserNFTs />
@@ -94,3 +95,8 @@ export default function Home() {
     </main>
   );
 }
+
+export const metadata = {
+  title: "NFT Marketplace",
+  description: "NFT Marketplace",
+};

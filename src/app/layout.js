@@ -8,6 +8,7 @@ import { Navigation } from "@/components/Navigation";
 import { NetworkId, HelloNearContract } from "@/config";
 
 import { Wallet } from "@/wallets/near";
+import Footer from "@/components/Footer";
 
 const wallet = new Wallet({
   networkId: NetworkId,
@@ -28,6 +29,7 @@ export default function RootLayout({ children }) {
         <NearContext.Provider value={{ wallet, signedAccountId }}>
           <Navigation />
           {children}
+          <Footer />
         </NearContext.Provider>
       </body>
     </html>

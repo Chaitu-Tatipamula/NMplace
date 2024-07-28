@@ -87,7 +87,7 @@ export const Navigation = () => {
         </div>
         <div className="rounded-xl flex flex-row items-center justify-center py-[0.75rem] px-[1.25rem] gap-[0.75rem]">
           <div className="w-[2.938rem] relative leading-[140%] font-semibold inline-block min-w-[2.938rem]">
-            <Link href={"/Create"}>Create</Link>
+            <Link href={"/create"}>Create</Link>
           </div>
         </div>
         <div className="rounded-xl flex flex-row items-center justify-center py-[0.75rem] px-[1.25rem] gap-[0.75rem]">
@@ -107,7 +107,7 @@ export const Navigation = () => {
           onClick={action}
         >
           <IconWallet />
-          <div className="w-[3.75rem] relative text-[1rem] leading-[140%] font-semibold font-segoe-ui text-croc-primary-white text-center inline-block min-w-[3.75rem]">
+          <div className="w-full max-w-52 relative text-[1rem] leading-[140%] font-semibold font-segoe-ui text-croc-primary-white text-center inline-block min-w-[3.75rem]">
             {label}
           </div>
         </button>
@@ -157,4 +157,9 @@ export const Navigation = () => {
       </AnimatePresence>
     </header>
   );
+};
+
+export const metadata = {
+  title: "Create NFT",
+  discription: "Create your NFT",
 };
