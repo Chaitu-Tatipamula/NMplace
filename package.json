@@ -19,6 +19,8 @@
     "@near-wallet-selector/here-wallet": "^8.9.7",
     "@near-wallet-selector/modal-ui": "^8.9.7",
     "@near-wallet-selector/my-near-wallet": "^8.9.7",
+    "@react-three/drei": "^9.109.2",
+    "@react-three/fiber": "^8.16.8",
     "bootstrap": "^5",
     "bootstrap-icons": "^1.11.3",
     "near-api-js": "^3.0.4",
@@ -26,7 +28,8 @@
     "react": "^18",
     "react-dom": "^18",
     "react-icons": "^5.2.1",
-    "react-responsive-modal": "^6.4.2"
+    "react-responsive-modal": "^6.4.2",
+    "three": "^0.167.1"
   },
   "overrides": {
     "near-api-js": "^3.0.4"

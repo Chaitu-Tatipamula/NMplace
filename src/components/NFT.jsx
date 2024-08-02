@@ -1,5 +1,6 @@
 import { MintContract } from '@/config'
 import { useOneToken } from '@/hooks/useOneToken'
+import ModelViewer from './ModelViewer'; 
 import React from 'react'
 
 export default function NFT({userId,tokenId}) {
@@ -7,6 +8,8 @@ export default function NFT({userId,tokenId}) {
   if (!token || !metadata) {
     return <div>Loading...</div>;
   }
+  const media = metadata.media;
+  const is3DModel = media && media.endsWith('.glb');
   return (
        <>
        <div className="bg-gray-900 w-full top-0  text-white p-3">
@@ -28,12 +31,19 @@ export default function NFT({userId,tokenId}) {
                   <div className="mb-6">
                     <div className="flex justify-center items-center">
                       {metadata.media && (
-                        <img
-                          src={metadata.media}
-                          alt={metadata.title}
-                          className="w-full h-auto object-cover rounded-lg"
-                          style={{ maxWidth: '500px', maxHeight: '500px' }} 
-                        />
+                        is3DModel ? (
+                            <div 
+                            style={{ width: '100%', height: '500px' }}>
+                              <ModelViewer modelUrl={media} />
+                            </div>
+                          ) : (
+                            <img
+                              src={media}
+                              alt={metadata.title}
+                              className="w-full h-auto object-cover rounded-lg"
+                              style={{ maxWidth: '500px', maxHeight: '500px' }} 
+                            />
+                          )
                       )}
                     </div>
                   </div>
