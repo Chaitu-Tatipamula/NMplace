@@ -92,6 +92,7 @@ export default function Home() {
       <UserNFTs />
       <h2>Listed NFTs</h2>
       <Ownerlistings /> */}
+      {/* <UserNFTs /> */}
     </main>
   );
 }

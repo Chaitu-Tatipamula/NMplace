@@ -35,6 +35,5 @@ export function NFTBrowse() {
         <Nftmarketcard />
       </div>
     </div>
-    
   );
 }

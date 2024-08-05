@@ -114,6 +114,9 @@ export const Navigation = () => {
         <div className="md:hidden" onClick={handleSidebar}>
           <IconMenu3 />
         </div>
+        <Link href="/u">
+          <CgProfile />
+        </Link>
       </div>
       <AnimatePresence>
         {open && (
