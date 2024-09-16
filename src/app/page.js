@@ -87,12 +87,12 @@ export default function Home() {
         </div>
       </div>
       <NftCircleAction />
-      {/* <h1 className="text-5xl font-bold">Home</h1> */}
-      {/* <h2>My NFTs</h2>
+      <h1 className="text-5xl font-bold">Home</h1>
+      <h2>My NFTs</h2>
       <UserNFTs />
       <h2>Listed NFTs</h2>
-      <Ownerlistings /> */}
-      {/* <UserNFTs /> */}
+      <Ownerlistings />
+      <UserNFTs />
     </main>
   );
 }

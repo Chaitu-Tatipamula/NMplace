@@ -10,6 +10,7 @@ import { MdOutlineBackspace, MdOutlineSell } from "react-icons/md";
 import { UpdatePriceModal } from './UpdatePriceModal'
 import { useRouter } from 'next/navigation'
 import { useOwnerListings } from '@/hooks/useOwnerListings'
+import ModelViewer from './ModelViewer'
 
 
 export default function Ownerlistings() {
@@ -38,12 +39,17 @@ export default function Ownerlistings() {
     
     function renderdata(metadata,token,index){
       const { title, description, media } = metadata;
+      const is3DModel = media && media.endsWith('.glb');
         return (
         
             <div onClick={()=>router.push(`/nft/${token.owner_id}/${token.token_id}`)}  className="cursor-pointer flex flex-col h-full shadow bg-gray-950 text-white overflow-hidden rounded-lg group"  >
               <div className='relative h-5/6 overflow-hidden'>
                   {media && (
-                    <img src={media} alt='null' className="w-full h-full object-cover transition-transform duration-300 transform group-hover:scale-110" />
+                    is3DModel ? (
+                        <ModelViewer modelUrl={media} />
+                    ) : (
+                        <img src={media} alt='null' className="w-full h-full object-cover transition-transform duration-500 transform group-hover:scale-110" />
+                    )
                   )}
                   <div className="absolute top-2 right-2 flex space-x-2">
                      {

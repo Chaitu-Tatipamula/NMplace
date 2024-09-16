@@ -76,7 +76,7 @@ export default function UserNFTs() {
                             <div className="py-2 text-white">
                                 {!saleStatus[token.token_id] && <button onClick={()=>handleOpenSellModal(`${token.token_id}`)} className="flex items-center justify-start gap-2 w-full px-2 py-2 hover:bg-gray-700 transition-colors duration-300"><MdOutlineSell/> Sell</button>}
                                 <button onClick={()=>handleOpenTransferModal(`${token.token_id}`)} className="flex items-center justify-start gap-2 w-full px-2 py-2 hover:bg-gray-700 transition-colors duration-300"><BiTransfer/> Transfer</button>
-                                <button onClick={()=>removeNftListing(wallet,MintContract,MarketplaceContract,token.token_id)} className="flex items-center justify-start gap-2 w-full px-2 py-2 hover:bg-gray-700 transition-colors duration-300"><MdOutlineBackspace/> Remove Listing</button>
+                                {saleStatus[token.token_id] && <button onClick={()=>removeNftListing(wallet,MintContract,MarketplaceContract,token.token_id)} className="flex items-center justify-start gap-2 w-full px-2 py-2 hover:bg-gray-700 transition-colors duration-300"><MdOutlineBackspace/> Remove Listing</button>}
                             </div>
                             </div>
                         )}

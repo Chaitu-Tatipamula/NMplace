@@ -15,7 +15,7 @@ export default function CreateNft() {
     const handleSubmit = async()=>{
         setLoading(true)
         const transaction = await wallet.callMethod({contractId : MintContract ,method : 'nft_mint', args : {
-            token_id: `token-4`,
+            token_id: `token-5`,
             metadata: {
               title: `${title}`,
               description: `${description}`,
