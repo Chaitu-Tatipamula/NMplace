@@ -3,16 +3,16 @@
 import { useEffect, useState } from "react";
 
 import "@/app/globals.css";
-import { NearContext } from "@/context";
-import { Navigation } from "@/components/Navigation";
-import { NetworkId, HelloNearContract } from "@/config";
+import { NearContext } from "../context";
+import { Navigation } from "../components/Navigation";
+import { MarketplaceContract, MintContract, NetworkId } from "../config";
 
 import { Wallet } from "@/wallets/near";
 import Footer from "@/components/Footer";
 
 const wallet = new Wallet({
   networkId: NetworkId,
-  createAccessKeyFor: HelloNearContract,
+  createAccessKeyFor: [MarketplaceContract, MintContract]
 });
 
 // Layout Component
