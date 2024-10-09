@@ -1,4 +1,3 @@
-"use client"
 import React, { useContext, useState,useEffect } from 'react'
 import { MarketplaceContract, MintContract } from '@/config';
 import { NearContext } from '@/context';

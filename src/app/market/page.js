@@ -1,15 +1,9 @@
-"use client"
 import Meteors from "@/components/magicui/meteors";
 import { Nftmarketcard } from "@/components/NFTmarketcard";
 import OnSale from "@/components/OnSale";
-import { NearContext } from "@/context";
-import { useApprovedTokens } from "@/hooks/useApprovedTokens";
 import { IconSearch } from "@tabler/icons-react";
-import { useContext } from "react";
 
 export default function page() {
-  const { wallet, signedAccountId } = useContext(NearContext)
-  const salesObj = useApprovedTokens()
   return (
     <main className="bg-black">
       <div className="absolute flex h-2/4 w-full flex-col items-center justify-center overflow-hidden rounded-lg border bg-background md:shadow-xl ">
@@ -50,7 +44,7 @@ export default function page() {
                 </h3>
                 <div className="rounded-xl bg-caption-label-text flex flex-row items-center justify-start py-[0.312rem] px-[0.625rem] text-left text-[1rem] font-caption-space-mono">
                   <div className="relative leading-[140%] inline-block min-w-[1.875rem]">
-                    {salesObj.length}
+                    302
                   </div>
                 </div>
               </div>
@@ -79,19 +73,27 @@ export default function page() {
       <div className="w-screen flex flex-col justify-center items-center">
         <section className="flex items-center justify-center flex-wrap gap-4  p-20 max-[600px]:p-4 text-white md:w-11/12">
           {/* <OnSale /> */}
-          {salesObj && salesObj.map((token, index) => (
-          <Nftmarketcard
-            key={index}
-            token={token}
-            metadata={token.metadata}
-            index={index}
-            signedAccountId={signedAccountId}
-            wallet={wallet}
-          />
-        ))}
+          <Nftmarketcard />
+          <Nftmarketcard />
+          <Nftmarketcard />
+          <Nftmarketcard />
+          <Nftmarketcard />
+          <Nftmarketcard />
+          <Nftmarketcard />
+          <Nftmarketcard />
+          <Nftmarketcard />
         </section>
       </div>
     </main>
+
+    // <main className="flex flex-col py-6 items-center gap-5">
+    //   <h1 className="text-5xl font-bold">Market</h1>
+    //   <OnSale />
+    // </main>
   );
 }
 
+export const metadata = {
+  title: "NFT",
+  description: "listed NFT",
+};

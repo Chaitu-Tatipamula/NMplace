@@ -20,8 +20,6 @@ export default function UserNFTs() {
     const [openTransferModal, setOpenTransferModal] = useState(false)
     const [tokenId, setTokenId] = useState(null)
     const [saleStatus, setSaleStatus] = useState({})
-    const [visibleCount, setVisibleCount] = useState(5);
-
     const router = useRouter()
 
     const handleOpenSellModal = (token) => {
@@ -75,10 +73,6 @@ export default function UserNFTs() {
         fetch()
     }, [wallet, signedAccountId, ownedTokens])
 
-    const handleViewMore = () => {
-        setVisibleCount((prev) => prev + 5); // Load more NFTs when clicked
-    }
-
     return (
         <section className="dark relative py-5 mx-5">
             <div className="flex flex-col items-center justify-center px-4 max-w-full h-full text-center text-white">
@@ -91,7 +85,7 @@ export default function UserNFTs() {
                     </h3>
                 </div>
             </div>
-            <div className="nft-carousel flex overflow-x-auto space-x-3 mt-4">
+            <div className="flex flex-wrap grid gap-3 md:w-80 justify-center mt-4">
                 {ownedTokens && ownedTokens.map((token, index) => (
                     <NFTCardOneInfo
                         key={index}
@@ -108,14 +102,6 @@ export default function UserNFTs() {
                     />
                 ))}
             </div>
-            {visibleCount < ownedTokens.length && (
-                <button
-                    className="mt-4 px-4 py-2 bg-blue-500 text-white rounded-lg"
-                    onClick={handleViewMore}
-                >
-                    View More
-                </button>
-            )}
             <SellModal open={openSellModal} handleClose={handleClose} tokenId={tokenId} sellNft={sellNft} />
             <TransferModaal open={openTransferModal} handleClose={handleClose} tokenId={tokenId} transferNft={transferNft} />
         </section>
