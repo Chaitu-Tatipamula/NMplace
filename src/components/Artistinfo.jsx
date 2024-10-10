@@ -1,13 +1,16 @@
 "use client";
-import { useCallback } from "react";
+import { useCallback, useContext } from "react";
 import PropTypes from "prop-types";
 import { FaInstagram, FaRegCopy } from "react-icons/fa";
 import { RxDiscordLogo } from "react-icons/rx";
 import { FaXTwitter } from "react-icons/fa6";
+import { NearContext } from "@/context";
 const ArtistInfo = ({ className = "" }) => {
   const onGlobeIconClick = useCallback(() => {
     window.open("https://www.google.com");
   }, []);
+  const {signedAccountId} = useContext(NearContext)
+
 
   return (
     <section
@@ -17,7 +20,7 @@ const ArtistInfo = ({ className = "" }) => {
         <div className="w-full flex flex-col sm:flex-row items-start justify-between gap-5">
           <div className="flex flex-col gap-6 min-w-[16rem] sm:w-full">
             <h1 className="text-[2.5rem] font-semibold capitalize leading-[110%] w-full sm:text-[2.563rem] sm:leading-10  text-left">
-              Aditya
+              {signedAccountId}
             </h1>
             <div className="flex gap-5 text-[1.75rem] sm:flex-wrap">
               <div className="flex flex-col items-start justify-start min-w-[7.375rem]">
