@@ -39,12 +39,12 @@ export default function OwnerListings() {
         return (
             <div 
                 key={index} 
-                className="relative rounded-xl bg-chocolate-300 border border-chocolate-200 cursor-pointer overflow-hidden"
+                className="flex flex-col h-auto w-auto rounded-xl bg-chocolate-300 border border-chocolate-200 cursor-pointer overflow-hidden"
                 onClick={() => router.push(`/nft/${token.owner_id}/${token.token_id}`)}
-                    style={{height:'400px', width: '100%' }}
+                    style={{height:'400px', width : '100%' }}
                 >
                 <div 
-                    className="relative flex flex-grow w-full"
+                    className="relative w-full h-2/3 overflow-hidden rounded-t-xl"
                 >
                     
                     {media && (
@@ -54,7 +54,7 @@ export default function OwnerListings() {
                             <img src={media} alt='NFT Media' className="relative w-full h-full object-cover rounded-t-xl " />
                         )
                     )}
-                    {/* <div className="absolute top-2 right-2 flex space-x-2">
+                    <div className="absolute top-2 right-2 flex space-x-2">
                         {token.owner_id !== signedAccountId && (
                             <button 
                                 onClick={(e) => { e.stopPropagation(); buyNFT(wallet, MintContract, MarketplaceContract, token.token_id, token.sale_conditions) }} 
@@ -99,7 +99,7 @@ export default function OwnerListings() {
                                 </div>
                             )}
                         </button>
-                    </div> */}
+                    </div>
                 </div>
                 <div className="w-full p-5 flex flex-col gap-4">
                     <div className="flex flex-col gap-1">
@@ -124,14 +124,16 @@ export default function OwnerListings() {
     }
 
     return (
-        <div className="container mx-auto p-5">
-            <div className="grid grid-cols-1 sm:grid-cols-3 lg:grid-cols-5 gap-6">
-                {salesObj && salesObj.map((token, index) => (
-                    <div key={index} >
-                        {token.metadata && renderData(token.metadata, token, index)} 
-                    </div>
-                ))}
-            </div>
+        <div className="container mx-auto p-5 flex w-full">
+            {/* <div className='flex flex-col items-center justify-start h-auto relative w-full'> */}
+                {/* <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6 w-full max-w-6xl"> */}
+                    {salesObj && salesObj.map((token, index) => (
+                        <div key={index} >
+                            {token.metadata && renderData(token.metadata, token, index)} 
+                        </div>
+                    ))}
+                {/* </div> */}
+            {/* </div> */}
             <UpdatePriceModal open={openPriceModal} handleClose={handleClose} tokenId={tokenId} updatePrice={updatePrice} />
         </div>
     )

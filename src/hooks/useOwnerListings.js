@@ -32,8 +32,11 @@ export  function useOwnerListings() {
                     metadata,
                 };
             });
-
+            
             setSalesObj(salesWithMetadata);
+            console.log(tokenzz);
+            console.log(salesObj);
+            
         }
 
         if (wallet && signedAccountId && tokenzz.length > 0) {
