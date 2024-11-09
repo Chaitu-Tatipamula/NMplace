@@ -1,7 +1,7 @@
 "use client"
 import ArtistInfo from "@/components/Artistinfo";
 import { useTokens } from "@/hooks/useTokens";
-import { useContext, useState } from "react";
+import { useContext, useEffect, useState } from "react";
 import { MarketplaceContract, MintContract } from '@/config'
 import { NearContext } from '@/context'
 import { buyNFT, removeNftListing, updatePrice } from '@/utils/menuOps'
@@ -12,16 +12,19 @@ import { UpdatePriceModal } from '../../components/UpdatePriceModal'
 import { useRouter } from 'next/navigation'
 import { useOwnerListings } from '@/hooks/useOwnerListings'
 import ModelViewer from '../../components/ModelViewer'
+import { ShimmerThumbnail, ShimmerText, ShimmerBadge } from 'react-shimmer-effects';
+
 
 const ArtistPageDesktop = () => {
   const { wallet, signedAccountId } = useContext(NearContext)
-    const salesObj = useOwnerListings()
-    const [menuOpen, setMenuOpen] = useState(null); 
-    const [openPriceModal, setOpenPriceModal] = useState(false);
-    const [tokenId, setTokenId] = useState(null)
+  const [menuOpen, setMenuOpen] = useState(null); 
+  const [openPriceModal, setOpenPriceModal] = useState(false);
+  const [tokenId, setTokenId] = useState(null)
+  const [isLoading, setIsLoading] = useState(true);
     const router = useRouter()
     const [showListed, setShowListed] = useState(false);
     const tokenzz = useTokens()
+    const salesObj = useOwnerListings()
     const handleTabToggle = () => {
       setShowListed(!showListed);
     };
@@ -37,6 +40,18 @@ const ArtistPageDesktop = () => {
 
     const toggleMenu = (index) => {
         setMenuOpen(menuOpen === index ? null : index);
+    };
+
+    useEffect(() => {
+      if (tokenzz && salesObj ) {
+        setIsLoading(false);
+      }
+    }, [tokenzz, salesObj]);
+
+    const shimmerStyles = {
+      background: "linear-gradient(90deg, rgba(255, 255, 255, 0.1) 25%, rgba(255, 255, 255, 0.2) 50%, rgba(255, 255, 255, 0.1) 75%)",
+      backgroundSize: "200% 100%",
+      animation: "shimmer 1.5s infinite"
     };
 
     function renderData(metadata, token, index) {
@@ -134,23 +149,35 @@ const ArtistPageDesktop = () => {
   return (
     <div className="w-full relative bg-black flex flex-col items-start justify-start leading-[normal] tracking-[normal] text-center text-[1.375rem] text-caption-label-text font-basebody-work-sans">
       <section className="self-stretch flex flex-col items-center justify-start max-w-full">
-        <img
-          className="self-stretch relative max-w-full overflow-hidden max-h-full object-cover"
-          alt=""
-          src="/placeholder.png"
-        />
+      {isLoading ? (
+          <ShimmerThumbnail className={isLoading ? "bg-transparent" : ""} height={200} width={100} rounded style={isLoading ? shimmerStyles : {}} />
+        ) : (
+          <img
+            className="self-stretch relative max-w-full overflow-hidden max-h-full object-cover"
+            alt="Artist Banner"
+            src="/placeholder.png"
+          />
+        )}
         <div className="w-[68.125rem] flex flex-row items-start justify-start py-[0rem] px-[1.25rem] box-border max-w-full z-[1] mt-[-4.375rem]">
           <div className="rounded-xl flex flex-row items-start justify-start border-[2px] border-solid border-chocolate-200">
-            <img
-              className="h-[7.5rem] w-[7.5rem] relative object-cover"
-              loading="lazy"
-              alt=""
-              src="/asset1.png"
-            />
+          {isLoading ? (
+              <ShimmerThumbnail className={isLoading ? "bg-transparent" : ""} height={120} width={120} rounded style={isLoading ? shimmerStyles : {}} />
+            ) : (
+              <img
+                className="h-[7.5rem] w-[7.5rem] relative object-cover"
+                loading="lazy"
+                alt="Artist Avatar"
+                src="/asset1.png"
+              />
+            )}
           </div>
         </div>
       </section>
-      <ArtistInfo />
+      {isLoading ? (
+        <ShimmerText className={isLoading ? "bg-transparent" : ""} line={2} gap={10} style={isLoading ? shimmerStyles : {}} />
+      ) : (
+        <ArtistInfo />
+      )}
       <div className="w-full flex flex-col gap-2">
         <div className="w-full border-t border-background-secondary"></div>
         <div className="w-full flex justify-center px-5">
@@ -164,7 +191,7 @@ const ArtistPageDesktop = () => {
                 Owned
               </h3>
               <div className="bg-caption-label-text rounded-xl py-1 px-3">
-                <span className="text-white text-sm">302</span>
+                <span className="text-white text-sm">{tokenzz.length}</span>
               </div>
             </button>
             <button 
@@ -176,7 +203,7 @@ const ArtistPageDesktop = () => {
                 Listed
               </h3>
               <div className="bg-background-secondary rounded-xl py-1 px-3">
-                <span className="text-white text-sm">67</span>
+                <span className="text-white text-sm">{salesObj.length}</span>
               </div>
             </button>
           </div>
@@ -186,22 +213,29 @@ const ArtistPageDesktop = () => {
       <section className="flex flex-col items-center justify-start py-20 px-5 gap-7 bg-[url('/nftcardsection.png')] bg-cover bg-no-repeat bg-center w-full text-left text-lg text-white font-sans">
         <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6 w-full max-w-6xl">
           {/* Brow i think NFT card ka alag componenets hai so please use that insted of creating new componenets*/}
-          {
-            showListed ?
-            salesObj && salesObj.map((token, index) => (
-                <div key={index} >
-                    {token.metadata && renderData(token.metadata, token, index)} 
-                </div>
+          {isLoading ? (
+            Array(6).fill().map((_, idx) => (
+              <div key={idx} className="w-full">
+                <ShimmerThumbnail className={isLoading ? "bg-transparent" : ""} height={350} rounded style={isLoading ? shimmerStyles : {}}/>
+                <ShimmerText className={isLoading ? "bg-transparent" : ""} line={2} gap={10} style={isLoading ? shimmerStyles : {}}/>
+                <ShimmerBadge className={isLoading ? "bg-transparent" : ""} width={100} style={isLoading ? shimmerStyles : {}}/>
+              </div>
             ))
-            
-             :
-             tokenzz && tokenzz.map((token, index) => (
-                <div key={index} >
-                    {token.metadata && renderData(token.metadata, token, index)} 
+          ) : (
+            showListed ? (
+              salesObj && salesObj.map((token, index) => (
+                <div key={index}>
+                  {token.metadata && renderData(token.metadata, token, index)}
                 </div>
-            ))
-                
-          }
+              ))
+            ) : (
+              tokenzz && tokenzz.map((token, index) => (
+                <div key={index}>
+                  {token.metadata && renderData(token.metadata, token, index)}
+                </div>
+              ))
+            )
+          )}
         </div>
       </section>
       <UpdatePriceModal open={openPriceModal} handleClose={handleClose} tokenId={tokenId} updatePrice={updatePrice} />

@@ -94,14 +94,6 @@ export function Nftmarketcard({ token, metadata, index, signedAccountId, wallet 
                 {token.sale_conditions} NEAR
               </div>
             </div>
-            <div className="flex-1 flex flex-col items-end justify-center gap-1 text-right">
-              <div className="self-stretch relative leading-tight">
-                Highest Bid
-              </div>
-              <div className="self-stretch relative text-lg leading-6 text-croc-primary-white">
-                {/* Insert highest bid logic here */}
-              </div>
-            </div>
           </div>
         </div>
         

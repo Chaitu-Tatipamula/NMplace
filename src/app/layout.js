@@ -12,7 +12,7 @@ import Footer from "@/components/Footer";
 
 const wallet = new Wallet({
   networkId: NetworkId,
-  createAccessKeyFor: [MarketplaceContract, MintContract]
+  createAccessKeyFor: MarketplaceContract, MintContract
 });
 
 // Layout Component
