@@ -1,3 +1,4 @@
+"use client"
 import UserNFTs from "@/components/UserNFTs";
 import React from "react";
 import Ownerlistings from "@/components/OwnedListings";
@@ -91,7 +92,7 @@ export default function Home() {
   );
 }
 
-export const metadata = {
+ const metadata = {
   title: "NFT Marketplace",
   description: "NFT Marketplace",
 };
