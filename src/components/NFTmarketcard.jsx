@@ -44,7 +44,7 @@ export function Nftmarketcard({ token, metadata, index, signedAccountId, wallet 
               <img alt={title || 'NFT Image'} src={media} className="w-full h-full object-cover" style={{ width: '100%',height : '100%', objectFit: 'cover' }} />
             )
           )}
-          <div className="absolute top-2 right-2 flex space-x-2">
+          <div className="absolute flex top-2 right-2  space-x-2">
           {token.owner_id !== signedAccountId && (
             <button onClick={(e) => { e.stopPropagation(); buyNFT(wallet, MintContract, MarketplaceContract, token.token_id, token.sale_conditions) }} >
               Buy

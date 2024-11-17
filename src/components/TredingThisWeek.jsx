@@ -10,7 +10,8 @@ import { SellModal } from './SellModal'
 import { TransferModaal } from './TransferModaal'
 import { useRouter } from 'next/navigation'
 import ModelViewer from './ModelViewer'
-import NFTCardOneInfo from './NFTcard'
+import NFTCardOneInfo  from './NFTcard'
+import { ShimmerBadge, ShimmerText, ShimmerThumbnail} from 'react-shimmer-effects';  // Import shimmer effect
 
 export default function UserNFTs() {
     const { signedAccountId, wallet } = useContext(NearContext)
@@ -20,8 +21,8 @@ export default function UserNFTs() {
     const [openTransferModal, setOpenTransferModal] = useState(false)
     const [tokenId, setTokenId] = useState(null)
     const [saleStatus, setSaleStatus] = useState({})
-    const [visibleCount, setVisibleCount] = useState(5);
-
+    const [visibleCount, setVisibleCount] = useState(4);  // Start by displaying 4 cards
+    const [loading,setLoading] = useState(true)
     const router = useRouter()
 
     const handleOpenSellModal = (token) => {
@@ -54,6 +55,12 @@ export default function UserNFTs() {
         return data !== null
     }
 
+    useEffect(()=>{
+        if(wallet && signedAccountId){
+            setLoading(false)
+        }
+    },[wallet, signedAccountId])
+
     useEffect(() => {
         async function fetch() {
             const data = await wallet.viewMethod({
@@ -71,13 +78,20 @@ export default function UserNFTs() {
                 saleStatusObj[token.token_id] = isListed
             }
             setSaleStatus(saleStatusObj)
+            setLoading(false)
         }
         fetch()
     }, [wallet, signedAccountId, ownedTokens])
 
     const handleViewMore = () => {
-        setVisibleCount((prev) => prev + 5); // Load more NFTs when clicked
+        setVisibleCount((prev) => prev + 4);  // Show next 4 cards when clicked
     }
+
+    const shimmerStyles = {
+        background: "linear-gradient(90deg, rgba(255, 255, 255, 0.1) 25%, rgba(255, 255, 255, 0.2) 50%, rgba(255, 255, 255, 0.1) 75%)",
+        backgroundSize: "200% 100%",
+        animation: "shimmer 1.5s infinite"
+    };
 
     return (
         <section className="dark relative py-5 mx-5">
@@ -91,31 +105,53 @@ export default function UserNFTs() {
                     </h3>
                 </div>
             </div>
-            <div className="nft-carousel flex overflow-x-auto space-x-3 mt-4">
-                {ownedTokens && ownedTokens.map((token, index) => (
-                    <NFTCardOneInfo
-                        key={index}
-                        image={token.metadata?.media || ''}
-                        NFT={token.metadata?.title || 'No title available'}
-                        owner={token.owner_id}
-                        Eth={saleStatus[token.token_id] ? 'Listed' : 'Not Listed'}
-                        onClick={() => router.push(`/nft/${token.owner_id}/${token.token_id}`)}
-                        menuOpen={menuOpen === index}
-                        toggleMenu={() => toggleMenu(index)}
-                        handleOpenSellModal={() => handleOpenSellModal(`${token.token_id}`)}
-                        handleOpenTransferModal={() => handleOpenTransferModal(`${token.token_id}`)}
-                        removeNftListing={() => removeNftListing(wallet, MintContract, MarketplaceContract, token.token_id)}
-                    />
-                ))}
+
+            {/* Shimmer effect for loading state */}
+            <div className="nft-carousel flex overflow-x-auto space-x-3 mt-4 ">
+                {ownedTokens.length === 0 ? (
+                    <div className="flex space-x-3">
+                        {[...Array(4)].map((_, index) => (
+                            <>
+                                <ShimmerThumbnail className={loading ? "bg-transparent" : ""} height={350} width={350} rounded style={loading ? shimmerStyles : {}}/>
+                               
+                            </>
+                        ))}
+                    </div>
+                ) : (
+                    ownedTokens.slice(0, visibleCount).map((token, index) => (
+                        <NFTCardOneInfo
+                            key={index}
+                            token={token}
+                            image={token.metadata?.media || ''}
+                            NFT={token.metadata?.title || 'No title available'}
+                            owner={token.owner_id}
+                            isListed={saleStatus[token.token_id] ? 'Listed' : 'Not Listed'}
+                            onClick={() => router.push(`/nft/${token.owner_id}/${token.token_id}`)}
+                            menuOpen={menuOpen === index}
+                            toggleMenu={() => toggleMenu(index)}
+                            handleOpenSellModal={() => handleOpenSellModal(`${token.token_id}`)}
+                            handleOpenTransferModal={() => handleOpenTransferModal(`${token.token_id}`)}
+                            removeNftListing={() => removeNftListing(wallet, MintContract, MarketplaceContract, token.token_id)}
+                            handleClose={()=>handleClose()}
+                        />
+                    ))
+                )}
             </div>
+
+            {/* View More button */}
             {visibleCount < ownedTokens.length && (
-                <button
-                    className="mt-4 px-4 py-2 bg-blue-500 text-white rounded-lg"
-                    onClick={handleViewMore}
-                >
-                    View More
-                </button>
+                <div className="flex justify-center mt-4">
+                    <button
+                        className="px-4 py-2 bg-blue-500 text-white rounded-lg flex items-center gap-2"
+                        onClick={handleViewMore}
+                    >
+                        <span>View More</span>
+                        <HiMenu />
+                    </button>
+                </div>
             )}
+
+            {/* Modal for selling and transferring NFTs */}
             <SellModal open={openSellModal} handleClose={handleClose} tokenId={tokenId} sellNft={sellNft} />
             <TransferModaal open={openTransferModal} handleClose={handleClose} tokenId={tokenId} transferNft={transferNft} />
         </section>
