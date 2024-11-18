@@ -85,33 +85,43 @@ const ArtistPageDesktop = () => {
                               Buy
                           </button>
                       )}
-                      <button 
-                          onClick={(e) => { e.stopPropagation(); toggleMenu(index) }} 
-                          className="bg-gray-950 text-white px-2 py-1 rounded hover:bg-gray-900"
+                      <button
+                          onClick={(e) => {
+                              e.stopPropagation();
+                              toggleMenu(index);
+                          }}
+                          className="bg-chocolate-250 text-white px-2 py-1 hover:bg-chocolate-300 rounded-xl"
                       >
                           <HiMenu />
                           {menuOpen === index && (
-                              <div className="absolute right-0 mt-4 bg-gray-900 w-40 shadow-lg z-10">
-                                  <div className="py-2 text-white">
+                              <div
+                                  className="absolute top-full right-0 mt-4 bg-chocolate-250 shadow-lg rounded-xl z-10 box-border border-[1px] border-solid border-chocolate-100 backdrop-filter backdrop-blur-2xl"
+                                  style={{ transform: 'translateX(-0.5rem)' }}
+                              >
+                                  <div className="text-white">
                                       {token.owner_id !== signedAccountId && (
-                                          <button 
-                                              onClick={() => buyNFT(wallet, MintContract, MarketplaceContract, token.token_id, token.sale_conditions)} 
-                                              className="flex items-center justify-start gap-2 w-full px-2 py-2 hover:bg-gray-700"
+                                          <button
+                                              onClick={() =>
+                                                  buyNFT(wallet, MintContract, MarketplaceContract, token.token_id, token.sale_conditions)
+                                              }
+                                              className="flex items-center justify-start gap-2 w-full px-2 py-2 hover:bg-chocolate-300 transition-colors duration-300"
                                           >
                                               <MdOutlineSell /> Buy
                                           </button>
                                       )}
                                       {token.owner_id === signedAccountId && (
                                           <>
-                                              <button 
-                                                  onClick={() => removeNftListing(wallet, MintContract, MarketplaceContract, token.token_id)} 
-                                                  className="flex items-center justify-start gap-2 w-full px-2 py-2 hover:bg-gray-700"
+                                              <button
+                                                  onClick={() =>
+                                                      removeNftListing(wallet, MintContract, MarketplaceContract, token.token_id)
+                                                  }
+                                                  className="flex items-center justify-start gap-2 w-full px-2 py-2 hover:bg-chocolate-300 transition-colors duration-300 rounded-t-xl"
                                               >
                                                   <MdOutlineBackspace /> Remove Listing
                                               </button>
-                                              <button 
-                                                  onClick={() => handleOpenPriceModal(token.token_id)} 
-                                                  className="flex items-center justify-start gap-2 w-full px-2 py-2 hover:bg-gray-700"
+                                              <button
+                                                  onClick={() => handleOpenPriceModal(token.token_id)}
+                                                  className="flex items-center justify-start gap-2 w-full px-2 py-2 hover:bg-chocolate-300 transition-colors duration-300 rounded-b-xl"
                                               >
                                                   <BiTransfer /> Update Price
                                               </button>
@@ -121,6 +131,7 @@ const ArtistPageDesktop = () => {
                               </div>
                           )}
                       </button>
+
                   </div>
               </div>
               <div className="w-full p-5 flex flex-col gap-4">

@@ -5,18 +5,19 @@ import { useContext, useEffect, useState } from "react";
 import { NearContext } from "@/context";
 import { ShimmerBadge, ShimmerText, ShimmerThumbnail } from "react-shimmer-effects"; // Import shimmer effect
 import { useRouter } from "next/navigation";
+import Link from "next/link";
 
 export function NFTBrowse() {
   const { wallet, signedAccountId } = useContext(NearContext);
   const [visibleCount, setVisibleCount] = useState(4);
-  const [loading, setLoading] = useState(true); // Track loading state
+  const [loading, setLoading] = useState(true);
   const salesObj = useApprovedTokens();
-  const router = useRouter()
-
+  
   useEffect(() => {
     if (wallet && signedAccountId ) {
-      setLoading(false); // Set loading to false when data is available
+      setLoading(false);
     }
+    console.log(wallet, signedAccountId);
     if(!salesObj){
       setLoading(true)
     }
@@ -40,9 +41,11 @@ export function NFTBrowse() {
         </div>
         <button className="cursor-pointer py-[1rem] px-[3rem] bg-tomato-400 w-[11.375rem] rounded-xl box-border flex flex-row items-center justify-center gap-[0.75rem] whitespace-nowrap border-[2px] border-solid border-tomato-100 hover:bg-orangered-300 hover:box-border hover:border-[2px] hover:border-solid hover:border-orangered-100">
           <img className="h-[1.25rem] w-[1.25rem] relative" alt="" src="/eye.svg" />
-          <div className="w-[3.125rem] relative text-[1rem] leading-[140%] font-semibold font-segoe-ui text-croc-primary-white text-center inline-block min-w-[3.125rem]" onClick={router.push("/market")}>
-            See All
-          </div>
+            <div className="w-[3.125rem] relative text-[1rem] leading-[140%] font-semibold font-segoe-ui text-croc-primary-white text-center inline-block min-w-[3.125rem]">
+              <Link href={"/market"}>
+                  See All
+              </Link>
+            </div>
         </button>
       </div>
 

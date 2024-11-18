@@ -35,39 +35,55 @@ export function Nftmarketcard({ token, metadata, index, signedAccountId, wallet 
 
   return (
     <div className="flex h-auto w-full md:w-80 relative">
-      <div className="rounded-xl bg-chocolate-500 box-border flex flex-col items-center justify-start max-w-full border-[1px] border-solid border-chocolate-200" style={{height:'500px', width: '100%' }}  >
-        <div className="self-stretch flex-1 rounded-t-xl rounded-b-none flex flex-col items-center justify-center overflow-hidden" style={{ height: '70%' }}>
-          {media && (
-            is3DModel ? (
-              <ModelViewer modelUrl={media} />
-            ) : (
-              <img alt={title || 'NFT Image'} src={media} className="w-full h-full object-cover" style={{ width: '100%',height : '100%', objectFit: 'cover' }} />
-            )
-          )}
-          <div className="absolute flex top-2 right-2  space-x-2">
-          {token.owner_id !== signedAccountId && (
-            <button onClick={(e) => { e.stopPropagation(); buyNFT(wallet, MintContract, MarketplaceContract, token.token_id, token.sale_conditions) }} >
+    <div className="rounded-xl bg-chocolate-500 box-border flex flex-col items-center justify-start max-w-full border-[1px] border-solid border-chocolate-200" style={{height:'500px', width: '100%' }}  >
+      <div className="relative self-stretch flex-1 rounded-t-xl rounded-b-none flex flex-col items-center justify-center overflow-hidden" style={{ height: '70%' }}>
+        {media && (
+          is3DModel ? (
+            <ModelViewer modelUrl={media} />
+          ) : (
+            <img alt={title || 'NFT Image'} src={media} className="w-full h-full object-cover" style={{ width: '100%',height : '100%', objectFit: 'cover' }} />
+          )
+        )}
+        <div className="absolute flex top-2 right-2  space-x-2 text-sm ">
+          {token.owner_id !== signedAccountId ? (            
+            <button onClick={(e) => { e.stopPropagation(); buyNFT(wallet, MintContract, MarketplaceContract, token.token_id, token.sale_conditions) }} className="bg-chocolate-250 text-white px-2 py-1 rounded-xl hover:bg-chocolate-200" >
               Buy
             </button>
-          )}
-          <button onClick={(e) => { e.stopPropagation(); toggleMenu(index) }} className="bg-transparent text-white px-2 py-1 rounded relative">
-              <HiMenu />
-              {menuOpen === index && (
-                <div className="absolute right-0 mt-4 bg-chocolate-700 w-40 shadow-lg z-10 rounded">
-                  <div className="py-2 text-white">
-                    {token.owner_id !== signedAccountId && (
-                      <button onClick={() => buyNFT(wallet, MintContract, MarketplaceContract, token.token_id, token.sale_conditions)} className="flex items-center justify-start gap-2 w-full px-2 py-2 hover:bg-chocolate-500 transition-colors duration-300 rounded-t"><MdOutlineSell /> Buy</button>
-                    )}
-                    {token.owner_id === signedAccountId && (
-                      <button onClick={() => removeNftListing(wallet, MintContract, MarketplaceContract, token.token_id)} className="flex items-center justify-start gap-2 w-full px-2 py-2 hover:bg-chocolate-500 transition-colors duration-300"><MdOutlineBackspace /> Remove Listing</button>
-                    )}
-                    {token.owner_id === signedAccountId && (
-                      <button onClick={() => handleOpenPriceModal(`${token.token_id}`)} className="flex items-center justify-start gap-2 w-full px-2 py-2 hover:bg-chocolate-500 transition-colors duration-300 rounded-b"><BiTransfer /> Update Price</button>
-                    )}
+          ) : (
+            <button
+                onClick={(e) => {
+                  e.stopPropagation();
+                  toggleMenu(index);
+                }}
+                className="bg-chocolate-250 text-white px-2 py-1 hover:bg-chocolate-200 rounded "
+              >
+                <HiMenu />
+                {menuOpen === index && (
+                  <div
+                    className="absolute top-full right-0 mt-4 bg-chocolate-250 shadow-lg rounded-xl z-10 box-border border-[1px] border-solid border-chocolate-200 "
+                    style={{ transform: 'translateX(-0.5rem)' }}
+                  >
+                    <div className=" text-white">
+                      <button
+                        onClick={() =>
+                          removeNftListing(wallet, MintContract, MarketplaceContract, token.token_id)
+                        }
+                        className="flex items-center justify-start gap-2 w-full px-2 py-2 hover:bg-chocolate-200 transition-colors duration-300 rounded-t-xl"
+                      >
+                        <MdOutlineBackspace /> Remove Listing
+                      </button>
+                      <button
+                        onClick={() => handleOpenPriceModal(`${token.token_id}`)}
+                        className="flex items-center justify-start gap-2 w-full px-2 py-2 hover:bg-chocolate-200 transition-colors duration-300 rounded-b-xl"
+                      >
+                        <BiTransfer /> Update Price
+                      </button>
+                    </div>
                   </div>
-                </div>
-              )}
-            </button>
+                )}
+              </button>
+
+          )}
           </div>
         </div>
         <div className="self-stretch flex flex-col items-start justify-start pt-4 px-6 pb-4 gap-4 overflow-hidden" style={{ height: '30%' }}>

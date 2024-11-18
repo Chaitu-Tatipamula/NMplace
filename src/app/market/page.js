@@ -1,15 +1,23 @@
-"use client"
+"use client";
 import Meteors from "@/components/magicui/meteors";
 import { Nftmarketcard } from "@/components/NFTmarketcard";
-import OnSale from "@/components/OnSale";
 import { NearContext } from "@/context";
 import { useApprovedTokens } from "@/hooks/useApprovedTokens";
 import { IconSearch } from "@tabler/icons-react";
-import { useContext } from "react";
+import { useContext, useEffect, useState } from "react";
+import { ShimmerThumbnail } from "react-shimmer-effects"; // Import shimmer effect
 
-export default function page() {
-  const { wallet, signedAccountId } = useContext(NearContext)
-  const salesObj = useApprovedTokens()
+export default function Page() {
+  const { wallet, signedAccountId } = useContext(NearContext);
+  const [loading, setLoading] = useState(true);
+  const salesObj = useApprovedTokens();
+
+  useEffect(() => {
+    if (salesObj && salesObj.length > 0) {
+      setLoading(false);
+    }
+  }, [salesObj]);
+
   return (
     <main className="bg-black">
       <div className="absolute flex h-2/4 w-full flex-col items-center justify-center overflow-hidden rounded-lg border bg-background md:shadow-xl ">
@@ -43,7 +51,7 @@ export default function page() {
         <div className="self-stretch h-[0.063rem] relative box-border border-t-[1px] border-solid border-background-secondary" />
         <div className="self-stretch flex flex-row items-start justify-center py-[0rem] px-[1.25rem] box-border max-w-full">
           <div className="w-[65.625rem] flex flex-row items-start justify-start max-w-full">
-            <div className="flex-1 flex flex-row  items-start justify-start max-w-full [row-gap:20px] text-white">
+            <div className="flex-1 flex flex-row items-start justify-start max-w-full [row-gap:20px] text-white">
               <div className="flex-1 box-border flex flex-row items-center justify-center pt-[0.875rem] px-[1.25rem] pb-[0.687rem] gap-[1rem] max-w-full border-b-[2px] border-solid border-dimgray-200 mq450:flex-wrap mq450:min-w-full">
                 <h3 className="m-0 relative text-inherit leading-[1.938rem] capitalize font-semibold font-inherit inline-block min-w-[3.375rem] mq450:text-[1.125rem] mq450:leading-[1.563rem]">
                   NFTs
@@ -64,34 +72,30 @@ export default function page() {
                   </div>
                 </div>
               </div>
-              <div className="self-stretch w-[13.5rem] hidden flex-row items-center justify-center py-[0rem] px-[1.875rem] box-border gap-[1rem] text-caption-label-text">
-                <div className="flex-1 relative leading-[140%] capitalize font-semibold mq450:text-[1.125rem] mq450:leading-[1.563rem]">
-                  Collection
-                </div>
-                <div className="h-[2rem] rounded-xl bg-background-secondary flex flex-row items-center justify-start py-[0.312rem] px-[0.625rem] box-border text-left text-[1rem] text-croc-primary-white font-caption-space-mono">
-                  <div className="self-stretch relative leading-[140%]">4</div>
-                </div>
-              </div>
             </div>
           </div>
         </div>
       </div>
       <div className="w-screen flex flex-col justify-center items-center">
-        <section className="flex items-center justify-center flex-wrap gap-4  p-20 max-[600px]:p-4 text-white md:w-11/12">
-          {/* <OnSale /> */}
-          {salesObj && salesObj.map((token, index) => (
-          <Nftmarketcard
-            key={index}
-            token={token}
-            metadata={token.metadata}
-            index={index}
-            signedAccountId={signedAccountId}
-            wallet={wallet}
-          />
-        ))}
+        <section className="flex items-center justify-center flex-wrap gap-4 p-20 max-[600px]:p-4 text-white md:w-11/12">
+          {loading
+            ? Array.from({ length: 4 }).map((_, index) => (
+                <div key={index} className="flex flex-col items-center">
+                  <ShimmerThumbnail width={300} height={400} />
+                </div>
+              ))
+            : salesObj.map((token, index) => (
+                <Nftmarketcard
+                  key={index}
+                  token={token}
+                  metadata={token.metadata}
+                  index={index}
+                  signedAccountId={signedAccountId}
+                  wallet={wallet}
+                />
+              ))}
         </section>
       </div>
     </main>
   );
 }
-
