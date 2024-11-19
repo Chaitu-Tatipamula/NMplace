@@ -4,6 +4,7 @@ import { NearContext } from '@/context'
 import React, { useContext, useEffect, useState } from 'react'
 import Button from './button'
 import { utils } from 'near-api-js'
+import { useTokens } from '@/hooks/useTokens'
 
 export default function CreateNft() {
     const {signedAccountId,wallet } = useContext(NearContext)
@@ -11,11 +12,23 @@ export default function CreateNft() {
     const [description,setDescription] = useState(null)
     const [media,setMedia] = useState(null)
     const [loading,setLoading] = useState(false)
+    const tokenzz = useTokens()
     
     const handleSubmit = async()=>{
         setLoading(true)
+
+        let nextTokenId = 'token-1';
+        if (tokenzz && tokenzz.length > 0) {
+            const lastToken = tokenzz[tokenzz.length - 1];
+            const lastTokenId = lastToken?.token_id || '';
+            const lastNumber = parseInt(lastTokenId.split('-')[1], 10); 
+            if (!isNaN(lastNumber)) {
+                nextTokenId = `token-${lastNumber + 1}`;
+            }
+        }
+        
         const transaction = await wallet.callMethod({contractId : MintContract ,method : 'nft_mint', args : {
-            token_id: `token-5`,
+            token_id: nextTokenId,
             metadata: {
               title: `${title}`,
               description: `${description}`,

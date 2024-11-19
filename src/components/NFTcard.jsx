@@ -58,8 +58,8 @@ const NFTCardOneInfo = ({
             className="relative object-cover w-full h-full"
           />
         ))}
-      <div className="absolute bottom-0 left-0 w-full  rounded-lg bg-gray-300 box-border flex md:flex-row items-start md:items-center justify-between p-4 gap-4 z-10 border border-solid border-gray-500">
-        <div className="flex flex-col items-start justify-start">
+      <div className="absolute bottom-0 left-0 w-full  rounded-lg bg-gray-300 box-border flex md:flex-row items-start md:items-center justify-between p-4 gap-4 z-10 border border-solid border-gray-500 backdrop-filter backdrop-blur-md">
+        <div className="flex flex-col items-start justify-start ">
           <div className="flex flex-col items-start justify-start">
             <div className="relative tracking-wide leading-none font-semibold text-lg md:text-xl z-20">
               {NFT}
@@ -98,7 +98,7 @@ const NFTCardOneInfo = ({
           <div className="relative text-lg font-medium text-white ">Options</div>
           {menuOpen === key && (
             <div className="absolute mt-4 bg-chocolate-700 w-40 shadow-lg z-10 rounded backdrop-filter backdrop-blur-lg"
-            style={{ transform: 'translateY(-19rem) translateX(-0.75rem)' }}>
+            style={{ transform: 'translateY(-7rem) translateX(-0.75rem)' }}>
               {isListed == "Not Listed" ? (
                 <div className="py-2 text-white">
                   {owner === signedAccountId && (

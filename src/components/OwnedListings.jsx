@@ -111,7 +111,7 @@ export default function OwnerListings() {
                     <div className="flex justify-between text-sm font-mono text-caption-label-text">
                         <div>
                             <p>Price</p>
-                            <p className="text-white text-base">{token.sale_conditions || "1.63 ETH"}</p>
+                            <p className="text-white text-base">{token.sale_conditions}</p>
                         </div>
                         <div className="text-right">
                             <p>Highest Bid</p>

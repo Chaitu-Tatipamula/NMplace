@@ -7,10 +7,10 @@ import { MarketplaceContract, MintContract } from '@/config';
 import { NearContext } from '@/context';
 
 export function SellModal({open,handleClose,tokenId,sellNft}) {
-    const {  wallet } = useContext(NearContext)
+    const {  wallet, signedAccountId } = useContext(NearContext)
     const [price, setPrice] = useState('');
     const handleListNFT = () => {
-        sellNft(wallet, MintContract, MarketplaceContract, tokenId, price)
+        sellNft(wallet, signedAccountId, MintContract, MarketplaceContract, tokenId, price)
         handleClose();
       };
 

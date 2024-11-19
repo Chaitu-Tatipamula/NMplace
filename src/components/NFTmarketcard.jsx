@@ -60,7 +60,7 @@ export function Nftmarketcard({ token, metadata, index, signedAccountId, wallet 
                 <HiMenu />
                 {menuOpen === index && (
                   <div
-                    className="absolute top-full right-0 mt-4 bg-chocolate-250 shadow-lg rounded-xl z-10 box-border border-[1px] border-solid border-chocolate-200 "
+                    className="absolute top-full right-0 mt-4 bg-chocolate-250 shadow-lg rounded-xl z-10 box-border border-[1px] border-solid border-chocolate-200 backdrop-filter backdrop-blur-lg"
                     style={{ transform: 'translateX(-0.5rem)' }}
                   >
                     <div className=" text-white">

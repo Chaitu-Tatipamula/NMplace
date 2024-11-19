@@ -13,6 +13,8 @@ import { useRouter } from 'next/navigation'
 import { useOwnerListings } from '@/hooks/useOwnerListings'
 import ModelViewer from '../../components/ModelViewer'
 import { ShimmerThumbnail, ShimmerText, ShimmerBadge } from 'react-shimmer-effects';
+import { useOneToken } from "@/hooks/useOneToken";
+import { useTokensWithMetadata } from "@/hooks/useTokensWithMetadata";
 
 
 const ArtistPageDesktop = () => {
@@ -23,8 +25,11 @@ const ArtistPageDesktop = () => {
   const [isLoading, setIsLoading] = useState(true);
     const router = useRouter()
     const [showListed, setShowListed] = useState(false);
-    const tokenzz = useTokens()
+    const [saleStatus, setSaleStatus] = useState({});
+    const [ownedTokens, setOwnedTokens] = useState([])
+    const tokenzz = useTokensWithMetadata()
     const salesObj = useOwnerListings()
+    
     const handleTabToggle = () => {
       setShowListed(!showListed);
     };
@@ -34,13 +39,47 @@ const ArtistPageDesktop = () => {
         setTokenId(token)
     };
 
-    const handleClose = () => {
+    const checkSaleStatus = async (tokenId) => {
+      const data = await wallet.viewMethod({
+          contractId: MarketplaceContract,
+          method: "get_sale",
+          args: {
+              nft_contract_token: `${MintContract}.${tokenId}`
+          }
+      });
+      return data !== null;
+  };
+
+
+  const handleClose = () => {
         setOpenPriceModal(false)
     };
 
     const toggleMenu = (index) => {
         setMenuOpen(menuOpen === index ? null : index);
     };
+
+    useEffect(() => {
+      async function fetch() {
+          const data = await wallet.viewMethod({
+              contractId: MintContract,
+              method: "nft_tokens_for_owner",
+              args: {
+                  account_id: `${signedAccountId}`
+              }
+          })
+          
+          setOwnedTokens(data)
+          const saleStatusObj = {};
+          for (let token of data) {
+              const isListed = await checkSaleStatus(token.token_id);
+              saleStatusObj[token.token_id] = isListed;
+          }
+          setSaleStatus(saleStatusObj);
+          
+      }
+      fetch()
+  }, [wallet, signedAccountId,ownedTokens])
 
     useEffect(() => {
       if (tokenzz && salesObj ) {
@@ -54,10 +93,10 @@ const ArtistPageDesktop = () => {
       animation: "shimmer 1.5s infinite"
     };
 
-    function renderData(metadata, token, index) {
+    function renderData(metadata, token, index, price) {
       const { title, media } = metadata;
       const is3DModel = media && media.endsWith('.glb');
-      
+
       return (
           <div 
               key={index} 
@@ -98,7 +137,29 @@ const ArtistPageDesktop = () => {
                                   className="absolute top-full right-0 mt-4 bg-chocolate-250 shadow-lg rounded-xl z-10 box-border border-[1px] border-solid border-chocolate-100 backdrop-filter backdrop-blur-2xl"
                                   style={{ transform: 'translateX(-0.5rem)' }}
                               >
-                                  <div className="text-white">
+                                  {!saleStatus[token.token_id] ? (
+                                    <div className="py-2 text-white">
+                                        {token.owner_id === signedAccountId && (
+                                          <button
+                                            onClick={() => handleOpenSellModal(token.token_id)}
+                                            className="flex items-center justify-start gap-2 w-full px-2 py-2 hover:bg-chocolate-500 transition-colors duration-300"
+                                          >
+                                            <MdOutlineBackspace /> Sell
+                                          </button>
+                                        )}
+                                        {token.owner_id === signedAccountId && (
+                                          <button
+                                            onClick={() =>
+                                              handleOpenTransferModal(`${token.token_id}`)
+                                            }
+                                            className="flex items-center justify-start gap-2 w-full px-2 py-2 hover:bg-chocolate-500 transition-colors duration-300 rounded-b"
+                                          >
+                                            <BiTransfer /> Transfer
+                                          </button>
+                                      )}
+                                    </div>
+                                  ):(
+                                    <div className="text-white">
                                       {token.owner_id !== signedAccountId && (
                                           <button
                                               onClick={() =>
@@ -128,6 +189,7 @@ const ArtistPageDesktop = () => {
                                           </>
                                       )}
                                   </div>
+                                  )}
                               </div>
                           )}
                       </button>
@@ -141,16 +203,20 @@ const ArtistPageDesktop = () => {
                           <span>{token.owner_id}</span>
                       </div>
                   </div>
+                  {   
+                        !saleStatus[token.token_id] && (
+                            <div className="font-mono text-caption-label-text text-white text-base">Not Listed</div>
+                            )                        
+                  }
+                  {saleStatus[token.token_id] && 
                   <div className="flex justify-between text-sm font-mono text-caption-label-text">
                       <div>
                           <p>Price</p>
-                          <p className="text-white text-base">{token.sale_conditions || "1.63 ETH"}</p>
-                      </div>
-                      <div className="text-right">
-                          <p>Highest Bid</p>
-                          <p className="text-white text-base">0.33 wETH</p>
+                          <p className="text-white text-base">{price} NEAR</p>
+                          {token.owner_id==signedAccountId &&  <div className="text-white text-base text-truncate">Listed and Owned</div>}
                       </div>
                   </div>
+                  }
               </div>
           </div>
       )
@@ -236,13 +302,13 @@ const ArtistPageDesktop = () => {
             showListed ? (
               salesObj && salesObj.map((token, index) => (
                 <div key={index}>
-                  {token.metadata && renderData(token.metadata, token, index)}
+                  {token.metadata && renderData(token.metadata, token, index,token.sale_conditions)}
                 </div>
               ))
             ) : (
               tokenzz && tokenzz.map((token, index) => (
                 <div key={index}>
-                  {token.metadata && renderData(token.metadata, token, index)}
+                  {token.token.metadata && renderData(token.token.metadata, token.token, index, token.res ? token.res.sale_conditions : null )}
                 </div>
               ))
             )

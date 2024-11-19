@@ -19,7 +19,7 @@ export default function UserNFTs() {
     const [openSellModal, setOpenSellModal] = useState(false);
     const [openTransferModal, setOpenTransferModal] = useState(false);
     const [tokenId,setTokenId] = useState(null)
-    const [saleStatus, setSaleStatus] = useState({}); 
+    const [saleStatus, setSaleStatus] = useState({});
     const router = useRouter() 
 
     const handleOpenSellModal = (token) => {
@@ -41,7 +41,7 @@ export default function UserNFTs() {
         setMenuOpen(menuOpen === index ? null : index);
       };
 
-      const checkSaleStatus = async (tokenId) => {
+    const checkSaleStatus = async (tokenId) => {
         const data = await wallet.viewMethod({
             contractId: MarketplaceContract,
             method: "get_sale",

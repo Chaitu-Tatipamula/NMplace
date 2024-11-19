@@ -23,9 +23,8 @@ export  function useOwnerListings() {
                 return map;
             }, {});
 
-            // Add metadata to each sale object
             const salesWithMetadata = approved.map(sale => {
-                const tokenId = sale.token_id; // Ensure this matches the property name in your sale object
+                const tokenId = sale.token_id; 
                 const metadata = metadataMap[tokenId];
                 return {
                     ...sale,

@@ -1,5 +1,6 @@
 import { utils } from "near-api-js";
 
+
 export async function transferNft(wallet,MintContract,tokenId,receiverId){
     const tx = await wallet.callMethod({
         contractId : MintContract,
@@ -25,20 +26,58 @@ export async function removeNftListing(wallet,MintContract,MarketContract,tokenI
     })
 }
 
-export async function sellNft(wallet,MintContract,MarketplaceContract,tokenId,price){
-    const transaction =  await wallet.callMethod({
-        contractId : MintContract,
-        method : "nft_approve",
-        args : {
-            token_id : `${tokenId}`,
-            account_id : `${MarketplaceContract}`,
-            msg : JSON.stringify({
-                sale_conditions: `${price}`
-            })
-        },
-        deposit : `${utils.format.parseNearAmount("0.001")}`,
-    }) 
-    gas : "200000000000000"
+export async function sellNft(
+    wallet,
+    signedAccountId,
+    MintContract,
+    MarketplaceContract,
+    tokenId,
+    price
+) {
+    try {
+        const transactions = [
+            {
+                receiverId: MarketplaceContract,
+                actions: [
+                    {
+                        type: "FunctionCall",
+                        params: {
+                            methodName: "storage_deposit",
+                            args: { account_id: signedAccountId },
+                            gas: "300000000000000",
+                            deposit: utils.format.parseNearAmount("0.01"),
+                        },
+                    },
+                ],
+            },
+            {
+                receiverId: MintContract,
+                actions: [
+                    {
+                        type: "FunctionCall",
+                        params: {
+                            methodName: "nft_approve",
+                            args: {
+                                token_id: tokenId,
+                                account_id: MarketplaceContract,
+                                msg: JSON.stringify({
+                                    sale_conditions: `${price}`,
+                                }),
+                            },
+                            gas: "300000000000000",
+                            deposit: utils.format.parseNearAmount("0.001"), 
+                        },
+                    },
+                ],
+            },
+        ];
+        
+        const response = await wallet.signAndSendTransaction({transactions});
+        console.log("Transactions successfully sent:", response);
+    } catch (error) {
+        console.error("Error while listing NFT for sale:", error);
+        throw error;
+    }
 }
 
 export async function updatePrice(wallet,MintContract,MarketplaceContract,tokenId, price){
