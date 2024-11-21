@@ -4,7 +4,7 @@ import { useTokens } from "@/hooks/useTokens";
 import { useContext, useEffect, useState } from "react";
 import { MarketplaceContract, MintContract } from '@/config'
 import { NearContext } from '@/context'
-import { buyNFT, removeNftListing, updatePrice } from '@/utils/menuOps'
+import { buyNFT, removeNftListing, sellNft, transferNft, updatePrice } from '@/utils/menuOps'
 import { BiTransfer } from 'react-icons/bi'
 import { HiMenu } from 'react-icons/hi'
 import { MdOutlineBackspace, MdOutlineSell } from "react-icons/md";
@@ -15,12 +15,16 @@ import ModelViewer from '../../components/ModelViewer'
 import { ShimmerThumbnail, ShimmerText, ShimmerBadge } from 'react-shimmer-effects';
 import { useOneToken } from "@/hooks/useOneToken";
 import { useTokensWithMetadata } from "@/hooks/useTokensWithMetadata";
+import { TransferModaal } from "@/components/TransferModaal";
+import { SellModal } from "@/components/SellModal";
 
 
 const ArtistPageDesktop = () => {
   const { wallet, signedAccountId } = useContext(NearContext)
   const [menuOpen, setMenuOpen] = useState(null); 
   const [openPriceModal, setOpenPriceModal] = useState(false);
+  const [openSellModal, setOpenSellModal] = useState(false)
+  const [openTransferModal, setOpenTransferModal] = useState(false)
   const [tokenId, setTokenId] = useState(null)
   const [isLoading, setIsLoading] = useState(true);
     const router = useRouter()
@@ -39,6 +43,16 @@ const ArtistPageDesktop = () => {
         setTokenId(token)
     };
 
+    const handleOpenSellModal = (token) => {
+      setOpenSellModal(true)
+      setTokenId(token)
+  }
+
+  const handleOpenTransferModal = (token) => {
+      setOpenTransferModal(true)
+      setTokenId(token)
+  }
+
     const checkSaleStatus = async (tokenId) => {
       const data = await wallet.viewMethod({
           contractId: MarketplaceContract,
@@ -53,6 +67,8 @@ const ArtistPageDesktop = () => {
 
   const handleClose = () => {
         setOpenPriceModal(false)
+        setOpenSellModal(false)
+        setOpenTransferModal(false)
     };
 
     const toggleMenu = (index) => {
@@ -316,7 +332,8 @@ const ArtistPageDesktop = () => {
         </div>
       </section>
       <UpdatePriceModal open={openPriceModal} handleClose={handleClose} tokenId={tokenId} updatePrice={updatePrice} />
-
+      <SellModal open={openSellModal} handleClose={handleClose} tokenId={tokenId} sellNft={sellNft} />
+      <TransferModaal open={openTransferModal} handleClose={handleClose} tokenId={tokenId} transferNft={transferNft} />
     </div>
   );
 };

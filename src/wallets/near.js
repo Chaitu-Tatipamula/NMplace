@@ -152,6 +152,22 @@ export class Wallet {
     }
   }
 
+  signAndSendTransactions = async({ transactions})=> {
+    try {
+      const selectedWallet = await (await this.selector).wallet();
+
+      // Create a batch of transaction promises
+      const outcome = await selectedWallet.signAndSendTransactions({
+        transactions
+      });
+
+      return outcome;
+    } catch (error) {
+      console.error("Error signing and sending transactions:", error);
+      throw error;
+    }
+  }
+
   /**
    * Makes a call to a contract
    * @param {string} txhash - the transaction hash

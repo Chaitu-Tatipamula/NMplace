@@ -35,7 +35,7 @@ export async function sellNft(
     price
 ) {
     try {
-        const transactions = [
+        const depositTx = 
             {
                 receiverId: MarketplaceContract,
                 actions: [
@@ -49,7 +49,8 @@ export async function sellNft(
                         },
                     },
                 ],
-            },
+            }
+        const approveTx =
             {
                 receiverId: MintContract,
                 actions: [
@@ -69,10 +70,10 @@ export async function sellNft(
                         },
                     },
                 ],
-            },
-        ];
+            }
         
-        const response = await wallet.signAndSendTransaction({transactions});
+        
+        const response = await wallet.signAndSendTransactions({transactions : [depositTx, approveTx]});
         console.log("Transactions successfully sent:", response);
     } catch (error) {
         console.error("Error while listing NFT for sale:", error);
